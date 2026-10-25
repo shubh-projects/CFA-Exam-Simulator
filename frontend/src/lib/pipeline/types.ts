@@ -13,6 +13,7 @@ export interface ParsedQuestion {
   status: QuestionStatus;
   reason?: string;
   sourcePage: number;
+  keyPage?: number;
   topic: string;
   explanation?: string;
 }

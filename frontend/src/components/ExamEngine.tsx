@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 
+import { FinishDialog } from "./FinishDialog";
 import {
   type AnswerOption,
   type ExamQuestion,
@@ -88,6 +89,7 @@ function QuestionText({ content }: { content?: string | null }) {
 
 export function ExamEngine() {
   const [isNavigatorOpen, setIsNavigatorOpen] = useState(false);
+  const [isFinishOpen, setIsFinishOpen] = useState(false);
   const {
     examData,
     currentSession,
@@ -145,7 +147,7 @@ export function ExamEngine() {
     const handleKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
       if (target?.matches("input, textarea, select, [contenteditable='true']")) return;
-      if (!currentQuestionId) return;
+      if (!currentQuestionId || isFinishOpen) return;
 
       const key = event.key.toUpperCase();
       if (key === "A" || key === "B" || key === "C") {
@@ -165,7 +167,7 @@ export function ExamEngine() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentQuestionId, goToNext, goToPrevious, selectOption, toggleFlag]);
+  }, [currentQuestionId, goToNext, goToPrevious, selectOption, toggleFlag, isFinishOpen]);
 
   if (examData.length === 0 || !currentQuestion) {
     return (
@@ -196,7 +198,7 @@ export function ExamEngine() {
 
         <div className="flex items-center gap-2">
           <button type="button" onClick={() => setIsNavigatorOpen(true)} className="inline-flex items-center gap-1 rounded border border-slate-500 bg-slate-800 px-3 py-2 text-xs font-bold uppercase tracking-wide text-white"><ListChecks size={15} /> Navigator</button>
-          <button type="button" onClick={finishSession} className="rounded border border-slate-500 bg-slate-800 px-3 py-2 text-xs font-bold uppercase tracking-wide text-white transition hover:border-red-400 hover:bg-red-950 focus:outline-none focus:ring-2 focus:ring-red-400">Finish Section</button>
+          <button type="button" onClick={() => setIsFinishOpen(true)} className="rounded border border-slate-500 bg-slate-800 px-3 py-2 text-xs font-bold uppercase tracking-wide text-white transition hover:border-red-400 hover:bg-red-950 focus:outline-none focus:ring-2 focus:ring-red-400">Finish Section</button>
         </div>
       </header>
 
@@ -346,7 +348,16 @@ export function ExamEngine() {
           Next <ChevronRight size={18} />
         </button>
       </footer>
+      <FinishDialog
+        open={isFinishOpen}
+        session={currentSession}
+        answered={answeredCount}
+        unanswered={sessionQuestions.length - answeredCount}
+        flagged={flaggedCount}
+        secondsLeft={sessionTimeLeft}
+        onReturn={() => setIsFinishOpen(false)}
+        onFinish={() => { setIsFinishOpen(false); finishSession(); }}
+      />
     </main>
   );
 }
-

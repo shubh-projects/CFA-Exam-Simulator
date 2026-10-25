@@ -7,9 +7,12 @@ import { ExamEngine } from "../components/ExamEngine";
 import { ResultsDashboard } from "../components/ResultsDashboard";
 import { type ExamQuestion, useExamStore } from "../store/useExamStore";
 import { parseOcrPages } from "../lib/pipeline/parser";
+import { mergePasses } from "../lib/pipeline/merge";
+import type { ParseResult } from "../lib/pipeline/types";
 import { ocrImages } from "../lib/pipeline/ocr";
 import { localDb } from "../lib/db/local";
-import { validateExam } from "../lib/pipeline/validate";
+import { ReviewScreen } from "../components/ReviewScreen";
+import { setPageSource } from "../lib/pipeline/pageSource";
 
 type UploadType = "mock" | "practice";
 
@@ -36,8 +39,8 @@ export default function HomePage() {
   const [sessionMinutes, setSessionMinutes] = useState(100);
   const [breakMinutes, setBreakMinutes] = useState(31);
 
-  const openReview = (pages: Record<string, string>) => {
-    const parsed = parseOcrPages(pages);
+  const openReview = (pages: Record<string, string>) => openParsed(parseOcrPages(pages));
+  const openParsed = (parsed: ParseResult) => {
     if (!parsed.questions.length) throw new Error("No questions found. Check the format guide or try clearer source pages.");
     const questions = uploadType === "practice" ? [...parsed.questions].sort(() => Math.random() - 0.5) : parsed.questions;
     setExamData(questions as ExamQuestion[]); setDurations(sessionMinutes, breakMinutes); useExamStore.setState({ phase: "review" });
@@ -46,8 +49,17 @@ export default function HomePage() {
   async function handleImages(event: ChangeEvent<HTMLInputElement>) {
     const imageFiles = Array.from(event.target.files ?? []); if (!imageFiles.length) return;
     setIsLoading(true); setError(null);
-    try { const jobId = crypto.randomUUID(); const pages = await ocrImages(jobId, imageFiles.map((image, page) => ({ page, image })), (progress) => setError(progress.stage)); openReview(pages); }
+    try { setPageSource(async (page) => { const bitmap = await createImageBitmap(imageFiles[page]); const canvas = document.createElement("canvas"); canvas.width = bitmap.width; canvas.height = bitmap.height; canvas.getContext("2d")!.drawImage(bitmap, 0, 0); bitmap.close(); return canvas; }, imageFiles.length); const jobId = crypto.randomUUID(); const pages = await ocrImages(jobId, imageFiles.map((image, page) => ({ page, image })), (progress) => setError(progress.stage)); openReview(pages); }
     catch (caught) { setError(caught instanceof Error ? caught.message : "Image OCR failed."); } finally { setIsLoading(false); }
+  }
+
+  type PdfLike = { numPages: number; getPage(n: number): Promise<{ getViewport(o: { scale: number }): { width: number; height: number }; getTextContent(): Promise<{ items: Array<{ str?: string; hasEOL?: boolean }> }>; render(o: unknown): { promise: Promise<void> }; cleanup?: () => void }> };
+
+  async function renderPdfPage(pdf: PdfLike, pageIndex: number, dpi: number): Promise<HTMLCanvasElement> {
+    const source = await pdf.getPage(pageIndex + 1); const viewport = source.getViewport({ scale: dpi / 72 });
+    const canvas = document.createElement("canvas"); canvas.width = viewport.width; canvas.height = viewport.height;
+    await source.render({ canvas, canvasContext: canvas.getContext("2d")!, viewport }).promise; source.cleanup?.();
+    return canvas;
   }
 
   async function handlePdf(event: ChangeEvent<HTMLInputElement>) {
@@ -56,12 +68,29 @@ export default function HomePage() {
     setIsLoading(true); setError(null);
     try {
       const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs"); pdfjs.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.min.mjs";
-      const pdf = await pdfjs.getDocument({ data: await file.arrayBuffer(), wasmUrl: "/pdfjs/wasm/" }).promise;
+      // wasmUrl: scanned PDFs are usually JBIG2/JPEG2000 compressed; without these decoders pages render blank
+      const pdf = (await pdfjs.getDocument({ data: await file.arrayBuffer(), wasmUrl: "/pdfjs/wasm/" }).promise) as unknown as PdfLike;
       if (pdf.numPages > 150) setError("Large PDF: more than 150 pages.");
-      const direct: Record<string, string> = {}; const ocr: Array<{ page: number; image: HTMLCanvasElement }> = [];
-      const jobId = crypto.randomUUID();
-      for (let page = 1; page <= pdf.numPages; page += 1) { const source = await pdf.getPage(page); const content = await source.getTextContent(); const text = content.items.map((item) => "str" in item ? item.str : "").join(" "); if (text.length >= 200) { direct[String(page - 1)] = text; await localDb.pageText.put({ id: `${jobId}:text:${page - 1}`, jobId, page: page - 1, text, pass: "a" }); } else { const viewport = source.getViewport({ scale: 200 / 72 }); const canvas = document.createElement("canvas"); canvas.width = viewport.width; canvas.height = viewport.height; await source.render({ canvas, canvasContext: canvas.getContext("2d")!, viewport }).promise; ocr.push({ page: page - 1, image: canvas }); } setError(`Reading PDF (page ${page} of ${pdf.numPages})`); }
-      const recognised = ocr.length ? await ocrImages(jobId, ocr, (progress) => setError(progress.stage)) : {}; openReview({ ...direct, ...recognised });
+      setPageSource((page) => renderPdfPage(pdf, page, 110), pdf.numPages); // lets the review screen show the original page
+      const direct: Record<string, string> = {}; const needOcr: number[] = []; const jobId = crypto.randomUUID();
+      for (let page = 1; page <= pdf.numPages; page += 1) {
+        const source = await pdf.getPage(page); const content = await source.getTextContent(); const text = content.items.map((item) => (item.str ?? "") + (item.hasEOL ? "\n" : " ")).join("");
+        if (text.length >= 200) { direct[String(page - 1)] = text; await localDb.pageText.put({ id: `${jobId}:text:${page - 1}`, jobId, page: page - 1, text, pass: "a" }); } else needOcr.push(page - 1);
+        setError(`Reading PDF (page ${page} of ${pdf.numPages})`);
+      }
+      // Pass 1: every scanned page at 200 DPI. Pages are rendered one at a time (keeps memory low).
+      const first = needOcr.length ? await ocrImages(jobId, needOcr.map((page) => ({ page, image: () => renderPdfPage(pdf, page, 200) })), (progress) => setError(progress.stage)) : {};
+      const pagesA = { ...direct, ...first }; let parsed = parseOcrPages(pagesA);
+      // Pass 2: automatically re-read ONLY the pages behind flagged questions, at 300 DPI with another layout mode, and keep the better result.
+      const flagged = parsed.questions.filter((question) => question.status === "needs_review");
+      const redo = new Set<number>();
+      flagged.forEach((question) => [question.sourcePage, question.sourcePage + 1, question.keyPage].forEach((page) => { if (page !== undefined && needOcr.includes(page)) redo.add(page); }));
+      if (redo.size) {
+        const second = await ocrImages(jobId, [...redo].map((page) => ({ page, image: () => renderPdfPage(pdf, page, 300) })), (progress) => setError(`Re-reading ${redo.size} difficult pages: ${progress.done} of ${progress.total}`), "b");
+        const parsedB = parseOcrPages({ ...pagesA, ...second });
+        parsed = { ...parsedB, questions: mergePasses(parsed.questions, parsedB.questions) };
+      }
+      openParsed(parsed);
     } catch (caught) { setError(caught instanceof Error ? caught.message : "Unreadable or password-protected PDF."); } finally { setIsLoading(false); }
   }
 
@@ -83,6 +112,7 @@ export default function HomePage() {
     setIsLoading(true);
     try {
       const fileText = files.length ? (await Promise.all(files.map((file) => file.text()))).join("\n") : "";
+      setPageSource(null, 0);
       openReview({ "0": `${fileText}\n${pastedText}` });
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "An unexpected upload error occurred.");
@@ -93,10 +123,7 @@ export default function HomePage() {
 
   if (phase === "session1" || phase === "session2") return <ExamEngine />;
   if (phase === "results") return <ResultsDashboard />;
-  if (phase === "review") {
-    const summary = validateExam(useExamStore.getState().examData as never[]);
-    return <main className="min-h-screen bg-slate-100 p-5"><section className="mx-auto max-w-4xl rounded-xl bg-white p-6 shadow"><h1 className="text-2xl font-bold">Check your questions</h1><p className="mt-2 text-sm">Session 1: {summary.sessions[0].found}/90 · Session 2: {summary.sessions[1].found}/90 · {summary.needsReview.length} need review · {summary.corrected} corrected keys</p><p className="mt-4 rounded bg-amber-50 p-3 text-sm text-amber-900">Extraction is local and never invents content. Review uncertain questions before starting.</p><div className="mt-4 space-y-3">{useExamStore.getState().examData.filter((q) => q.status !== "ok").map((q) => <article key={q.id} className="rounded border border-amber-200 p-3"><b>Session {q.session}, question {q.n}</b><p>{q.stem}</p><p className="text-sm text-amber-800">{q.reason ?? q.status}</p></article>)}</div><button onClick={() => startSession(1)} className="mt-5 rounded bg-blue-700 px-5 py-3 font-bold text-white">Looks good — start exam</button></section></main>;
-  }
+  if (phase === "review") return <ReviewScreen />;
 
   if (phase === "break") {
     return (

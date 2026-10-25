@@ -41,11 +41,20 @@ export function similarity(left: string, right: string): number {
   return a.length + b.length === 0 ? 1 : (2 * matches(a, b)) / (a.length + b.length);
 }
 
+const looseA = /(?:^|[\s_|])([Aa])(?:[\.,\)]\s*|\s+(?=[\d$£€(−-]))/m; // "| A 1,102." (dot lost by OCR) - used only as a fallback
+
 function parseQuestion(lines: string[]): { stem: string; options: Partial<Record<AnswerOption, string>> } {
+  const strict = parseQuestionWith(lines, optionPattern);
+  if (strict.options.A && strict.options.B && strict.options.C) return strict;
+  const loose = parseQuestionWith(lines, { ...optionPattern, A: looseA });
+  return loose.options.A && loose.options.B && loose.options.C ? loose : strict;
+}
+
+function parseQuestionWith(lines: string[], patterns: Record<AnswerOption, RegExp>): { stem: string; options: Partial<Record<AnswerOption, string>> } {
   const text = lines.join("\n"); let position = 0;
   const spans: Partial<Record<AnswerOption, [number, number]>> = {};
   for (const option of ["A", "B", "C"] as AnswerOption[]) {
-    const match = optionPattern[option].exec(text.slice(position));
+    const match = patterns[option].exec(text.slice(position));
     if (!match) break;
     const start = position + match.index + match[0].indexOf(match[1]);
     spans[option] = [start, position + match.index + match[0].length];
@@ -62,8 +71,13 @@ function parseQuestion(lines: string[]): { stem: string; options: Partial<Record
 }
 
 function parseAnswer(lines: string[]): [AnswerOption | null, string] {
-  const text = lines.join(" "); const found = /^(?:[^\s]{1,3}\s*)?([ABCabc])[\.\)]\s*(.*)/.exec(text);
-  return found ? [found[1].toUpperCase() as AnswerOption, found[2].trim()] : [null, text];
+  const text = lines.join(" "); const found = /^(?:[^\s]{1,3}\s*)?(?:([ABCabc])[\.\)]\s*|([ABC])(?=\d))(.*)/.exec(text);
+  return found ? [(found[1] ?? found[2]).toUpperCase() as AnswerOption, found[3].trim()] : [null, text];
+}
+
+/** Option text vs printed answer text; also compares against the answer's prefix so stray text after it (page bleed) does not hurt. */
+function keySimilarity(option: string, keyText: string): number {
+  return Math.max(similarity(option, keyText), similarity(option, keyText.slice(0, option.length + 3)));
 }
 
 export function parseOcrPages(pages: OcrPages): ParseResult {
@@ -95,13 +109,15 @@ export function parseOcrPages(pages: OcrPages): ParseResult {
       if (!parsed.options.A || !parsed.options.B || !parsed.options.C) { status = "needs_review"; reason = "One or more answer options could not be read."; }
       if (!keyText) { status = "needs_review"; reason = reason ?? "Answer key entry is missing or unreadable."; }
       else {
-        const scored = (Object.keys(parsed.options) as AnswerOption[]).map((key) => [key, similarity(parsed.options[key]!, keyText)] as const).sort((a, b) => b[1] - a[1]);
-        const own = letter && parsed.options[letter] ? similarity(parsed.options[letter]!, keyText) : 0;
-        if (letter && own >= 0.6) correct = letter;
-        else if (scored[0] && scored[0][1] >= 0.85) { correct = scored[0][0]; if (correct !== letter) { status = "corrected"; reason = "Printed answer letter corrected to match answer text."; } }
+        const scored = (Object.keys(parsed.options) as AnswerOption[]).map((key) => [key, keySimilarity(parsed.options[key]!, keyText)] as const).sort((a, b) => b[1] - a[1]);
+        const own = letter && parsed.options[letter] ? keySimilarity(parsed.options[letter]!, keyText) : 0;
+        const bestScore = scored[0]?.[1] ?? 0;
+        const clearlyBeaten = bestScore >= 0.95 && bestScore - own >= 0.25 && scored[0][0] !== letter; // another option matches the printed text almost exactly
+        if (letter && own >= 0.6 && !clearlyBeaten) correct = letter;
+        else if (scored[0] && bestScore >= 0.85) { correct = scored[0][0]; if (correct !== letter) { status = "corrected"; reason = "Printed answer letter corrected to match answer text."; } }
         else { status = "needs_review"; reason = reason ?? "Answer key text does not match any option confidently."; }
       }
-      questions.push(withTopic({ id: `${session}-${n}`, session, n, stem: parsed.stem, A: parsed.options.A ?? "", B: parsed.options.B ?? "", C: parsed.options.C ?? "", correct, status, reason, sourcePage: item.page }));
+      questions.push(withTopic({ id: `${session}-${n}`, session, n, stem: parsed.stem, A: parsed.options.A ?? "", B: parsed.options.B ?? "", C: parsed.options.C ?? "", correct, status, reason, sourcePage: item.page, keyPage: keys.get(n)?.page }));
     }
   }
   return { questions, inferredSessions: !sections.some(Boolean) };

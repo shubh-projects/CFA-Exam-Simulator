@@ -30,7 +30,7 @@ export function filterColumn(data: OcrData, width: number): string {
   return lines.map((line) => line.filter((word) => word.bbox.x0 >= left && word.bbox.x1 <= right).map((word) => word.text).join(" ")).filter(Boolean).join("\n");
 }
 
-export async function ocrImages(jobId: string, images: Array<{ page: number; image: Blob | HTMLCanvasElement }>, onProgress: (progress: OcrProgress) => void, pass: "a" | "b" = "a", onPageDone?: (page: number, text: string, wordCount: number) => void): Promise<Record<string, string>> {
+export async function ocrImages(jobId: string, images: Array<{ page: number; image: Blob | HTMLCanvasElement | (() => Promise<HTMLCanvasElement>) }>, onProgress: (progress: OcrProgress) => void, pass: "a" | "b" = "a", onPageDone?: (page: number, text: string, wordCount: number) => void): Promise<Record<string, string>> {
   const total = images.length; const poolSize = Math.min(navigator.hardwareConcurrency || 2, 4); let cursor = 0; let done = 0;
   const workers: Worker[] = await Promise.all(Array.from({ length: Math.min(poolSize, total) }, async () => {
     const worker = await createWorker("eng", 1, {
@@ -39,15 +39,16 @@ export async function ocrImages(jobId: string, images: Array<{ page: number; ima
       langPath: "/tesseract/lang",
       gzip: true,
     });
-    await worker.setParameters({ tessedit_pageseg_mode: pass === "a" ? PSM.SINGLE_COLUMN : PSM.SINGLE_BLOCK, user_defined_dpi: "200" });
+    await worker.setParameters({ tessedit_pageseg_mode: pass === "a" ? PSM.SINGLE_COLUMN : PSM.SINGLE_BLOCK, user_defined_dpi: pass === "a" ? "200" : "300" });
     return worker;
   }));
   const result: Record<string, string> = {};
   await Promise.all(workers.map(async (worker) => {
     while (cursor < images.length) {
-      const item = images[cursor++]; const recognized = await worker.recognize(item.image, {}, { text: true, hocr: false, tsv: false, blocks: true });
+      const item = images[cursor++]; const lazy = typeof item.image === "function"; const source = lazy ? await (item.image as () => Promise<HTMLCanvasElement>)() : (item.image as Blob | HTMLCanvasElement); const recognized = await worker.recognize(source, {}, { text: true, hocr: false, tsv: false, blocks: true });
       const data = recognized.data as unknown as OcrData;
-      const width = item.image instanceof HTMLCanvasElement ? item.image.width : Math.max(1, ...extractLines(data).flat().map((word) => word.bbox.x1 / 0.935));
+      const width = source instanceof HTMLCanvasElement ? source.width : Math.max(1, ...extractLines(data).flat().map((word) => word.bbox.x1 / 0.935));
+      if (lazy && source instanceof HTMLCanvasElement) { source.width = 0; source.height = 0; } // free the page bitmap right away
       const text = filterColumn(data, width) || data.text; result[String(item.page)] = text;
       await localDb.pageText.put({ id: `${jobId}:${pass}:${item.page}`, jobId, page: item.page, text, pass });
       if (item.page === 3 || item.page === 4 || item.page === 5) console.log(`[OCR page ${item.page}] ${data.text.slice(0, 500)}`, { wordCount: extractLines(data).flat().length });
