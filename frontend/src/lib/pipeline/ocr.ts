@@ -22,12 +22,22 @@ export function filterColumn(data: OcrData, width: number): string {
 
 export async function ocrImages(jobId: string, images: Array<{ page: number; image: Blob | HTMLCanvasElement }>, onProgress: (progress: OcrProgress) => void, pass: "a" | "b" = "a"): Promise<Record<string, string>> {
   const total = images.length; const poolSize = Math.min(navigator.hardwareConcurrency || 2, 4); let cursor = 0; let done = 0;
-  const workers: Worker[] = await Promise.all(Array.from({ length: Math.min(poolSize, total) }, () => createWorker("eng", 1, { workerPath: "/tesseract/worker.min.js", corePath: "/tesseract", langPath: "/tesseract" })));
+  const workers: Worker[] = await Promise.all(Array.from({ length: Math.min(poolSize, total) }, async () => {
+    const worker = await createWorker("eng", 1, {
+      workerPath: "/tesseract/worker.min.js",
+      corePath: "/tesseract/core",
+      langPath: "/tesseract/lang",
+      gzip: true,
+    });
+    await worker.setParameters({ tessedit_pageseg_mode: pass === "a" ? PSM.SINGLE_COLUMN : PSM.SINGLE_BLOCK });
+    return worker;
+  }));
   const result: Record<string, string> = {};
   await Promise.all(workers.map(async (worker) => {
     while (cursor < images.length) {
       const item = images[cursor++]; const recognized = await worker.recognize(item.image, {}, { text: true, hocr: false, tsv: false, blocks: false });
-      const data = recognized.data as unknown as OcrData; const width = item.image instanceof HTMLCanvasElement ? item.image.width : 1;
+      const data = recognized.data as unknown as OcrData;
+      const width = item.image instanceof HTMLCanvasElement ? item.image.width : Math.max(1, ...(data.words ?? []).map((word) => word.bbox.x1 / 0.935));
       const text = filterColumn(data, width) || data.text; result[String(item.page)] = text;
       await localDb.pageText.put({ id: `${jobId}:${pass}:${item.page}`, jobId, page: item.page, text, words: data.words, pass });
       done += 1; onProgress({ done, total, stage: `Recognising text (page ${done} of ${total})` });

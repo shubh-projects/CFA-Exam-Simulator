@@ -6,9 +6,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "copy-ocr-assets": "node scripts/copy-ocr-assets.mjs",
+    "postinstall": "npm run copy-ocr-assets",
+    "prebuild": "npm run copy-ocr-assets && npm test"
   },
   "dependencies": {
+    "@tesseract.js-data/eng": "^1.0.0",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",

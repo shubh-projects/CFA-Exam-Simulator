@@ -8,6 +8,7 @@ import { ResultsDashboard } from "../components/ResultsDashboard";
 import { type ExamQuestion, useExamStore } from "../store/useExamStore";
 import { parseOcrPages } from "../lib/pipeline/parser";
 import { ocrImages } from "../lib/pipeline/ocr";
+import { localDb } from "../lib/db/local";
 import { validateExam } from "../lib/pipeline/validate";
 
 type UploadType = "mock" | "practice";
@@ -54,12 +55,13 @@ export default function HomePage() {
     if (file.size > 60 * 1024 * 1024) setError("Large PDF: processing may be slow on this device.");
     setIsLoading(true); setError(null);
     try {
-      const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs"); pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+      const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs"); pdfjs.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.min.mjs";
       const pdf = await pdfjs.getDocument({ data: await file.arrayBuffer() }).promise;
       if (pdf.numPages > 150) setError("Large PDF: more than 150 pages.");
       const direct: Record<string, string> = {}; const ocr: Array<{ page: number; image: HTMLCanvasElement }> = [];
-      for (let page = 1; page <= pdf.numPages; page += 1) { const source = await pdf.getPage(page); const content = await source.getTextContent(); const text = content.items.map((item) => "str" in item ? item.str : "").join(" "); if (text.length >= 200) direct[String(page - 1)] = text; else { const viewport = source.getViewport({ scale: 200 / 72 }); const canvas = document.createElement("canvas"); canvas.width = viewport.width; canvas.height = viewport.height; await source.render({ canvas, canvasContext: canvas.getContext("2d")!, viewport }).promise; ocr.push({ page: page - 1, image: canvas }); } setError(`Reading PDF (page ${page} of ${pdf.numPages})`); }
-      const recognised = ocr.length ? await ocrImages(crypto.randomUUID(), ocr, (progress) => setError(progress.stage)) : {}; openReview({ ...direct, ...recognised });
+      const jobId = crypto.randomUUID();
+      for (let page = 1; page <= pdf.numPages; page += 1) { const source = await pdf.getPage(page); const content = await source.getTextContent(); const text = content.items.map((item) => "str" in item ? item.str : "").join(" "); if (text.length >= 200) { direct[String(page - 1)] = text; await localDb.pageText.put({ id: `${jobId}:text:${page - 1}`, jobId, page: page - 1, text, pass: "a" }); } else { const viewport = source.getViewport({ scale: 200 / 72 }); const canvas = document.createElement("canvas"); canvas.width = viewport.width; canvas.height = viewport.height; await source.render({ canvas, canvasContext: canvas.getContext("2d")!, viewport }).promise; ocr.push({ page: page - 1, image: canvas }); } setError(`Reading PDF (page ${page} of ${pdf.numPages})`); }
+      const recognised = ocr.length ? await ocrImages(jobId, ocr, (progress) => setError(progress.stage)) : {}; openReview({ ...direct, ...recognised });
     } catch (caught) { setError(caught instanceof Error ? caught.message : "Unreadable or password-protected PDF."); } finally { setIsLoading(false); }
   }
 
