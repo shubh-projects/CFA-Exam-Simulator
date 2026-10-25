@@ -1,0 +1,1622 @@
+[
+ {
+  "session": 1,
+  "n": 1,
+  "stem": "Which of the following is a violation according to the Standard relating to preservation of confidentiality?",
+  "A": "Members share details relating to former clients with third party service providers",
+  "B": "Members convey to clients that not all firm-sponsored resources may be appropriate for communicating confidential information",
+  "C": "When allowed under the law, members share confidential client information to defend themselves in an investigation by the CFA Institute Professional Conduct Program",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 2,
+  "stem": "Which of the following is most accurate according to the Standard relating to knowledge of the law? Members are required to:",
+  "A": "dissociate from client activities they believe are unethical.",
+  "B": "have detailed knowledge of all the laws that could potentially govern their activities.",
+  "C": "report potential violations of the Code and Standards committed by fellow members to the CFA Institute Professional Conduct Program.",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 3,
+  "stem": "Robert Dowling, CFA, is part of a research team. Dowling's team has recommended a “buy” rating on a company, but Dowling does not agree with the recommendation. To comply with the Standard relating to diligence and reasonable basis, Dowling:",
+  "A": "must decline to be identified with the report.",
+  "B": "must ensure that the report reflects his opinion.",
+  "C": "may continue to be identified with the report as long as the recommendation has a reasonable basis.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 4,
+  "stem": "Daniel Morgan is a Level III candidate in the CFA Program. After taking the exam, Morgan signs into a CFA-candidate-only Internet forum and writes a post expressing the opinion that the CFA Program and examination policies are unfair. Has Morgan most likely violated the Standards?",
+  "A": "No.",
+  "B": "Yes, by providing confidential program information.",
+  "C": "Yes, by compromising the reputation of CFA Institute.",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 5,
+  "stem": "Which of the following is a recommended procedure for members to meet their obligations under the Standard relating to performance presentation? In",
+  "A": "Members should use a single representative account for each investment mandate while presenting performance history",
+  "B": "Members should consider the knowledge and sophistication of the audience to whom performance history is being presented",
+  "C": "Members should exclude terminated accounts while presenting performance history indication of when the accounts were terminated",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 6,
+  "stem": "According to the Standard relating to loyalty, prudence, and care, members are most likely required to:",
+  "A": "vote all proxies on behalf of clients even if some proxies offer no direct client benefit.",
+  "B": "avoid the use of soft dollars unless the services purchased have corresponding benefit client.",
+  "C": "consider each investment based solely on its characteristics, independently of other assets.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 7,
+  "stem": "According to the GIPS standards, compliance may be claimed only:",
+  "A": "after verification has been performed.",
+  "B": "if the firm is compliant on a firm-wide basis.",
+  "C": "with respect to specific composites and not to individual portfolios.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 8,
+  "stem": "According to the Standard relating to additional compensation agreements, a member is required to obtain permission from her employer before accepting benefits from third",
+  "A": "only for services rendered to her employer.",
+  "B": "only for services that might create a conflict with her employer’s interest.",
+  "C": "both for services rendered to her employer and for services that might create a conflict her employer’s interest.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 9,
+  "stem": "Diana Fairbanks, CFA, is married to an auditor who is employed at a large accounting firm. her husband mentions that a computer firm he audits will receive a qualified opinion she nothing of it. Later that week when she reviews a new client account she notices that there substantial holdings of this computer firm. When she does a thorough internet search for on the company, she does not find anything about its most recent audit or any other information. Which of the following actions concerning the computer stock should Fairbanks most likely take to avoid violating the CFA Institute Standards of Professional Conduct?",
+  "A": "Take no investment action",
+  "B": "Complete a thorough and diligent analysis of the company and then sell the stock",
+  "C": "Sell the stock immediately as she has a reasonable basis for taking this investment action",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 10,
+  "stem": "if a member self-discloses a matter that questions his professional conduct in his annual statement to the CFA Institute, an initial investigation is conducted by the:",
+  "A": "Standard of Practice Council.",
+  "B": "Disciplinary Review Committee.",
+  "C": "Professional Conduct Program staff.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 11,
+  "stem": "A firm manages $500 million in large-cap equity portfolios. Of this, non-fee-paying portfolios amount to $50 million, and fee-paying non-discretionary portfolios total $75 million. To be compliant with the GIPS standards, the firm must present the value of its large-cap composite as:",
+  "A": "$375 million.",
+  "B": "$425 million.",
+  "C": "$450 million.",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 12,
+  "stem": "Which of the following is among the recommended procedures for compliance with the Standard relating to misconduct? Procedure 1 [Disseminate to all employees a list of past violations together with disciplinary Procedure 2 check references of potential employees to ensure that they are of good character.",
+  "A": "Procedure 1 only",
+  "B": "Procedure 2 only",
+  "C": "Both Procedure 1 and Procedure 2",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 13,
+  "stem": "A member is developing allocation procedures for block trades and new issues. According to the recommended procedures for compliance with the Standard relating to fair dealing, the member's allocation procedures should involve:",
+  "A": "prohibiting consideration of advanced interest when allocating trades for new issues.",
+  "B": "bundling orders on a first-in, first-out basis for efficiency as appropriate for the asset class.",
+  "C": "giving client accounts participating in a block trade, execution prices corresponding to order arrival time.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 14,
+  "stem": "Ming Mei Xu, CFA, who is a well-known analyst issues a buy recommendation ona small-cap stock. Xu shares her recommendation with the public two days after communicating the recommendation with her clients. The public dissemination leads to a significant increase in stock price. Trevor Thomas, CFA, one of Xu's clients, buys a large position in the stock. sells the entire position for a profit a month later. His action leads to a significant decline in stock price. Has the Standard relating to market manipulation been violated?",
+  "A": "No",
+  "B": "Yes, by Xu",
+  "C": "Yes, by Thomas",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 15,
+  "stem": "Michael Pak has recently retired from the investment business. A CFA Institute member for 20 years, Pak has decided not to pay his CFA Institute dues or file the annual Professional Statement. Applying to join the investment committee of a charitable organization, Pak writes: “was a CFA Institute member for 20 years.” Has Pak most likely violated the Standards?",
+  "A": "No",
+  "B": "Yes, the Standard relating to conduct as Participants in CFA Institute programs",
+  "C": "Yes, the Standard relating to reference to CFA Institute, the CFA designation, and the CFA Program",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 16,
+  "stem": "According to the Standard relating to loyalty, members must: In",
+  "A": "subordinate any personal obligations to their work.",
+  "B": "place the interests of their employer below the interests of clients.",
+  "C": "refrain from entering into an independent business while still employed.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 17,
+  "stem": "Yun Hae, CFA, is a portfolio manager at Citadel Capital (CC). Hae’s brother maintains a fee- paying retirement account at CC. Hae has no beneficial ownership in her brother’s account. Whenever an IPO becomes available that is suitable for her clients, Hae first allocates shares to other clients before placing any remaining shares in her brother’s account. She adopts this procedure to avoid potential conflicts of interest. Hae's actions violate the Standard(s) relating: In",
+  "A": "only to fair dealing.",
+  "B": "only to priority of transactions.",
+  "C": "both to fair dealing and to priority of transactions. pe",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 18,
+  "stem": "To claim compliance with the GIPS standards, a firm that has been in existence for two years must:",
+  "A": "wait one year to present three years of GIPS-compliant performance.",
+  "B": "wait three years to present five years of GIPS-compliant performance.",
+  "C": "initially present GIPS-compliant performance since the firm's inception date.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 19,
+  "stem": "Which of the following is consistent with the recommended procedures for compliance with the Standard relating to referral fees? e Statement 1: \"Investment professionals should provide to their clients notification of approved referral fee programs.\" e Statement 2: \"Members should provide their employer at least annual updates on the amount and nature of compensation received.\"",
+  "A": "Statement 1 only",
+  "B": "Statement 2 only",
+  "C": "Both Statement 1 and Statement 2",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 20,
+  "stem": "Which of the following is a recommended procedure for compliance with the Standard relating to responsibilities of supervisors? Members should encourage their firms to:",
+  "A": "adopt a code of ethics that addresses general fiduciary concepts.",
+  "B": "provide the firm's clients with a copy of detailed compliance procedures.",
+  "C": "commingle the firm's code of ethics with its detailed compliance procedures.",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 21,
+  "stem": "Which of the following claims can an asset management firm most likely make regarding the GIPS standards?",
+  "A": "Claim GIPS compliance using the GIPS Compliance Statement",
+  "B": "State that the firm will achieve GIPS compliance by a future date",
+  "C": "Claim partial GIPS compliance with details on areas of non-compliance",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 22,
+  "stem": "According to the Standard relating to suitability, a member should update a client's Investment Policy Statement at least:",
+  "A": "quarterly.",
+  "B": "semiannually.",
+  "C": "annually.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 23,
+  "stem": "Ann Collins, CFA, manages a fund for Kreet Investments (KI). KI provides a retirement plan employees offering a choice of ten large diversified mutual funds. The choices include two managed by KI employees. Collins changes her personal investment allocation to the two managed by her colleagues without disclosing the change to KI or to her clients. Has violated the Standard relating to avoid or disclose conflicts?",
+  "A": "No",
+  "B": "Yes, by failing to disclose the allocation change to KI",
+  "C": "Yes, by failing to disclose the allocation change to her clients",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 24,
+  "stem": "John Clark, CFA, starts a new job and re-creates a research report on a company he his previous employer. He uses information gathered directly from the covered company. also uses his personal notes taken while working at his previous employer. Has Clark the Standard relating to record retention?",
+  "A": "No",
+  "B": "Yes, because he uses information he gathered directly from the covered company",
+  "C": "Yes, because he uses his personal notes taken while working at his previous employer",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 25,
+  "stem": "According to the Standard relating to misrepresentation, a member is most likely required",
+  "A": "disclose his intended use of an external manager.",
+  "B": "always provide a benchmark for investment strategies.",
+  "C": "provide attribution to a member who is no longer with the firm when issuing a report.",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 26,
+  "stem": "With respect to issuer-paid research, members are not required to:",
+  "A": "strictly limit the type of compensation they accept from the covered company.",
+  "B": "fully disclose the nature of compensation received from the covered company.",
+  "C": "accept compensation related only to investment performance of the covered company.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 27,
+  "stem": "Joanne Rosewood, CFA, replaces one of the third-party advisers she uses to manage her portfolios with an internal investment strategy. Rosewood does not notify her clients there is no change in the portfolios’ investment style. Rosewood has most likely violated Standard relating to:",
+  "A": "avoid or disclose conflicts. —",
+  "B": "loyalty, prudence, and care.",
+  "C": "communication with clients and prospective clients.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 28,
+  "stem": "for a non-colluding oligopoly in a price war market, competitors are most likely to:",
+  "A": "match a rival's price reduction and ignore a rival's price increase.",
+  "B": "ignore a rival's price reduction and match a rival's price increase.",
+  "C": "match both a rival's price reduction as well as a rival's price increase.",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 29,
+  "stem": "Which of the following sampling methods involves selecting every kth member from a population until a desired sample size is obtained?",
+  "A": "Cluster sampling _",
+  "B": "Systematic sampling",
+  "C": "Convenience sampling",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 30,
+  "stem": "In the year.of a change in accounting policy, comparability of the presented financial statements is best with:",
+  "A": "prospective application.",
+  "B": "retrospective application.",
+  "C": "modified retrospective application.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 31,
+  "stem": "An analyst calculates a portfolio's target semideviation of returns over twelve consecutive months, including seven months of below-target returns. The sum of the squared deviations below the target is 42%2. The target semideviation is closest to:",
+  "A": "1.87%.",
+  "B": "1.95%.",
+  "C": "2.65%.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 32,
+  "stem": "Which of the following mature companies is most likely to use the greatest amount of leverage in its capital structure?",
+  "A": "Mining company",
+  "B": "Software company",
+  "C": "Shipping company",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 33,
+  "stem": "Which of the following statements about company stakeholders is most accurate?",
+  "A": "Debtholders tend to prefer that a company raise more equity",
+  "B": "Shareholder—debtholder conflict is greater for short-term creditors",
+  "C": "Shareholders are more likely than debtholders to impose contractual limits on leverage",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 34,
+  "stem": "Which of the following market structures most likely has the greatest elasticity of",
+  "A": "Oligopoly",
+  "B": "Perfect competition",
+  "C": "Monopolistic competition",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 35,
+  "stem": "Which of the following is an assumption of Modigliani and Miller's propositions regarding structure?",
+  "A": "Investors have homogeneous expectations",
+  "B": "Investors can borrow and lend at a zero interest rate",
+  "C": "Financing decisions depend on investment decisions",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 36,
+  "stem": "In geopolitics, cabotage is best described as a:",
+  "A": "financial tool.",
+  "B": "multi-tool approach.",
+  "C": "national security tool.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 37,
+  "stem": "A policy rate that is neutral will become contractionary if trend growth:",
+  "A": "increases and expected inflation increases.",
+  "B": "decreases and expected inflation remains the same.",
+  "C": "decreases and expected inflation increases by the same amount.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 38,
+  "stem": "An analyst gathers the following information (in € millions) about a company's 3-year construction contract: Contract price | 108 |Expected total costs |70 Actual costs incurred in Year 1 28 Bonus for on-time completion 6 z Costs are an appropriate measure of progress toward completion. The construction company has only limited experience with similar contracts and knows that many factors outside its control could cause delay. Assuming it is highly probable that revenue will not be subsequently reversed, revenue (in € millions) recognized in Year 1 is most likely:",
+  "A": "0.",
+  "B": "43.2.",
+  "C": "45.6.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 39,
+  "stem": "The amount of time that elapses from the point when a company invests in working capital until the point at which the company collects cash is:",
+  "A": "net operating cycle.",
+  "B": "defensive interval ratio.",
+  "C": "number of days of sales outstanding.",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 40,
+  "stem": "In the recovery phase of the business cycle, the economy is most likely: In",
+  "A": "enjoying an upswing and a positive output gap opens.",
+  "B": "going through a trough and a positive output gap opens.",
+  "C": "going through a trough and a negative output gap starts to narrow.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 41,
+  "stem": "In periods of rising prices and increasing inventory quantities, using the last-in, first-out (LIFO) inventory valuation method instead of the first-in, first-out (FIFO) inventory valuation method most likely increases: In",
+  "A": "total assets.",
+  "B": "cost of goods sold.",
+  "C": "days of inventory on hand.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 42,
+  "stem": "Risks associated with supplier relationships are typically mitigated through:",
+  "A": "contracts.",
+  "B": "regulation.",
+  "C": "board representation.",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 43,
+  "stem": "An increase in utility for a company's products as these products become more widely adopted best describes: .",
+  "A": "network effects.",
+  "B": "operating leverage.",
+  "C": "product differentiation.",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 44,
+  "stem": "If inventory that was written down ina previous reporting period subsequently increases in value, the amount of the original write-down can be reversed under:",
+  "A": "IFRS only.",
+  "B": "US GAAP only.",
+  "C": "both IFRS and US GAAP.",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 45,
+  "stem": "A cooperative country is most likely to have characteristics of both:",
+  "A": "technology exchange and retaliation. -",
+  "B": "rules standardization and reciprocation.",
+  "C": "harmonization of tariffs and arbitrary rules.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 46,
+  "stem": "All else being equal, if interest expense is not tax deductible, as a company's marginal tax increases, the company's WACC:",
+  "A": "decreases.",
+  "B": "remains the same.",
+  "C": "increases.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 47,
+  "stem": "Consider the following 20 items listed in ascending order: -41 [-18 -17 |2|-3|+ -5 | 3 [3/3/55 | 7 | 7 }11 12 | 20 | 21 | 21 The median value of the items is closest to:",
+  "A": "3.",
+  "B": "4.",
+  "C": "5. a ee El",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 48,
+  "stem": "A company is forecasting 10% organic growth in revenues. The company believes sales volume will grow by 6.4%. The forecasted price/mix impact for the company is closest to:",
+  "A": "3.4%.",
+  "B": "17.0%.",
+  "C": "56.3%",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 49,
+  "stem": "The term Big Data refers to:",
+  "A": "structured data only.",
+  "B": "unstructured data only.",
+  "C": "both structured and unstructured data.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 50,
+  "stem": "Which of the following best describes the link between the cash flow statement and the balance sheet?",
+  "A": "The cash flow statement reconciles changes in all accounts on the balance sheet",
+  "B": "The statement’s investing activities section reconciles the changes in current assets on the balance sheet",
+  "C": "The cash flow statement reconciles the beginning and ending balances of cash reported on the balance sheet",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 51,
+  "stem": "Assuming its trading partner does not retaliate, which of the following conditions must hold in order for a large country to increase its national welfare by imposing a tariff?",
+  "A": "It must have a comparative advantage in the production of the imported good",
+  "B": "The deadweight loss must be smaller than the benefit of its improving terms of trade",
+  "C": "It must auction the import licenses for a fee to offset the decline in the consumer surplus",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 52,
+  "stem": "An analyst estimates the probabilities of three possible economic scenarios and the probabilities of a stock having a positive or a negative return in each scenario. These scenarios are best represented by a:",
+  "A": "tree-map.",
+  "B": "tree diagram.",
+  "C": "probability density function.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 53,
+  "stem": "An inflation-targeting central bank most likely has a medium-term inflation target sufficiently:",
+  "A": "below zero to avoid the risk of deflation but high enough to ensure price stability.",
+  "B": "above zero to avoid the risk of deflation but low enough to ensure price stability.",
+  "C": "above zero to avoid the risk of inflation and high enough to ensure price stability.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 54,
+  "stem": "Assuming wages and prices are stable, which of the following policy combinations most likely leads to an increase in the private sector's share of GDP?",
+  "A": "Easy fiscal and easy monetary policy",
+  "B": "Tight fiscal and easy monetary policy",
+  "C": "Easy fiscal and tight monetary policy",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 55,
+  "stem": "An investor gathers the following information: Account 1 Account 2 ] Account 3 Stated annual interest rate 6.1% 6.3% 6.2% Compounding frequency Daily Annual Quarterly If a $1,000 deposit is made today, the future value in one year will be greatest for:",
+  "A": "Account 1.",
+  "B": "Account 2.",
+  "C": "Account 3.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 56,
+  "stem": "At year end, a company has non-convertible debt, ordinary shares, and employee stock outstanding. The company’s capital structure is considered to be:",
+  "A": "simple, if the options are antidilutive.",
+  "B": "complex, because the company has both debt and equity.",
+  "C": "complex, because the options are convertible into ordinary shares.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 57,
+  "stem": "Which of the following is most likely to signal manipulation of financial reporting for a large, diversified company?",
+  "A": "A history of large expense items classified as unusual",
+  "B": "Operating margins out of line with other diversified companies",
+  "C": "Changes in accounting policies to reflect new accounting standards",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 58,
+  "stem": "According to capital allocation principles, managers should ignore:",
+  "A": "taxes. NN",
+  "B": "the volatility of cash flows.",
+  "C": "expenses that were already incurred.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 59,
+  "stem": "An individual can invest $50,000 today and receive $56,000 in one year's time. If her required rate of return is 12.0%, the rate of return on the investment is:",
+  "A": "less than the required rate of return.",
+  "B": "equal to the required rate of return.",
+  "C": "greater than the required rate of return.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 60,
+  "stem": "The entire cost of an intangible asset is most likely expensed when incurred if the asset is:",
+  "A": "developed internally.",
+  "B": "acquired through business combinations.",
+  "C": "purchased in a transaction other than a business combination.",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 61,
+  "stem": "An argument for a country’s high national debt relative to GDP being a concern is when the debt:",
+  "A": "is owed to domestic citizens.",
+  "B": "is used for capital investments.",
+  "C": "reduces private sector investing.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 62,
+  "stem": ". An analyst gathers the following information (in £ millions) about three companies: Company1 | Company2 | Company 3 Days of inventory | 45 62 50 Days sales outstanding 30 45 | 53 Days of payables 25 60 | 48 The company with the shortest cash conversion cycle is:",
+  "A": "Company 1.",
+  "B": "Company 2.",
+  "C": "Company 3.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 63,
+  "stem": "Which of.the following factors is most likely to lead to economies of scale?",
+  "A": "Supply constraints",
+  "B": "Duplication of product lines",
+  "C": "Specialization by workers",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 64,
+  "stem": "An analyst gathers the following information (in € thousands) about a company's total assets: ash 300 hort-term marketable investments 400 Receivables | 100 Inventory 200 If the current ratio is 1.0, the quick ratio is:",
+  "A": "0.7.",
+  "B": "0.8.",
+  "C": "0.9.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 65,
+  "stem": "The bootstrap resampling method:",
+  "A": "guarantees that all items will appear in the resamples.",
+  "B": "relies on an analytical formula to estimate the distribution of the estimators.",
+  "C": "mimics the random sampling process by treating the randomly drawn sample as if it were population.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 66,
+  "stem": "Assume the percentage increases in each of the following listed items: Percentage Increase Real domestic exchange rate (USD/EUR) 5 Eurozone price level 2 US price level 1.5 The predicted change in the nominal US spot exchange rate is closest to:",
+  "A": "-0.5%.",
+  "B": "4.5%.",
+  "C": "5.5%.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 67,
+  "stem": "A company is prohibited from reversing the impairment loss on a long-lived asset classified",
+  "A": "held for use under IFRS.",
+  "B": "held for use under US GAAP.",
+  "C": "held for sale under US GAAP.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 68,
+  "stem": "Unaudited financial statements are most likely presented in a(n): wa ET",
+  "A": "annual report. _",
+  "B": "quarterly report.",
+  "C": "proxy statement.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 69,
+  "stem": "From the perspective of a corporate issuer, which of the following is a benefit of issuing debt rather than equity as a source of capital? Debt is most likely:",
+  "A": "cheaper.",
+  "B": "less risky.",
+  "C": "more permanent.",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 70,
+  "stem": "Compared with its net income, a mature company’s operating cash flow is most likely:",
+  "A": "lower.",
+  "B": "the same.",
+  "C": "higher.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 71,
+  "stem": "In hypothesis testing, which of the following is stated in terms of population parameters?",
+  "A": "The null hypothesis only",
+  "B": "The alternative hypothesis only",
+  "C": "Both the null hypothesis and the alternative hypothesis",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 72,
+  "stem": "An analyst gathers the following information (in £ millions) from a company's year-end balance sheet: ee . Year? [Year | Accounts receivable _ | 65 | 55 Inventory | 120140 PRE | 1,400 _| 1,400 | Accumulated depreciation _ __ i120 {80 | [accounts payable | 25 | 40. During Year 2, net income was £860 million. There were no acquisitions or sales of property, plant, and equipment and no write-downs. Cash flow from operating activities (in £ millions) for Year 2 is:",
+  "A": "855.",
+  "B": "895.",
+  "C": "925.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 73,
+  "stem": "Costs incurred during the development phase that are related to internally generated, identifiable intangible assets:",
+  "A": "must be expensed.",
+  "B": "must be capitalized.",
+  "C": "can be capitalized if certain criteria are met.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 74,
+  "stem": "An analyst runs a simple linear regression using 35 months of data to assess a country's term interest rate as a function of its inflation rate, with the following results: Source Degrees of Freedom Sums of Squares Mean Square Regression 1 17.3009 17.3009 Error 33 20.2299 0.6130 Total 34 37.5308 The value of the standard error of the estimate is closest to:",
+  "A": "0.68.",
+  "B": "0.78.",
+  "C": "1.05. .",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 75,
+  "stem": "If the cost of capital exceeds the return on invested capital, shareholder value will:",
+  "A": "decrease.",
+  "B": "remain the same.",
+  "C": "increase. .",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 76,
+  "stem": "An analyst gathers the following information (in € thousands) about an electronics manufacturing company: | Year2 | Year1 Cost of sales 1000 300 | Cost of ending inventory 150 120 | Net realizable value of inventory 125 160 | Changes to the allowance for inventory obsolescence have already been reflected in cost of sales. The days of inventory on hand (based on average inventory and 365-day year) for Year is closest to: ,",
+  "A": "45.",
+  "B": "49.",
+  "C": "52. | ee",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 77,
+  "stem": "The effectiveness of infrastructure spending as a near-term fiscal stimulant would be least constrained by the:",
+  "A": "action lag.",
+  "B": "impact lag.",
+  "C": "recognition lag.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 78,
+  "stem": "An analyst gathers the following information (in € millions) about a company's land reported under the revaluation model: Original cost 12 Fair market value at initial revaluation on 31 December Year 1 Fair market value at second revaluation on 31 December Year 2 As a result of the second revaluation, the company recognizes in Year 2:",
+  "A": "a€5 million loss on the income statement.",
+  "B": "a €5 million loss in other comprehensive income.",
+  "C": "neither a loss on the income statement nor a loss in other comprehensive income.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 79,
+  "stem": "The goal of ordinary least squares regression is to minimize the sum of the squared deviations between the observations of the dependent variable and the corresponding:",
+  "A": "estimated values of the dependent variable.",
+  "B": "observed values of the independent variable.",
+  "C": "values of the true underlying dependent variable.",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 80,
+  "stem": "Which of the following is most likely a motivation for leasing long term rather than purchasing a high-value asset?",
+  "A": "Reduced exposure to obsolescence risk",
+  "B": "Not having to recognize an asset on the balance sheet",
+  "C": "Not having to recognize a liability on the balance sheet",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 81,
+  "stem": "The most appropriate statement about financial ratio analysis is that it has limited use as an analytical tool for:",
+  "A": "evaluating management.",
+  "B": "comparing companies that use different accounting methods.",
+  "C": "providing insights into microeconomic relationships within a company that help analysts project earnings.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 82,
+  "stem": "Which of the following could result in a permanent difference between accounting profit taxable income?",
+  "A": "Used tax credits",
+  "B": "A tax loss carryforward",
+  "C": "Difference between carrying amount and tax base of assets because of different methods",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 83,
+  "stem": "An analyst gathers the following financial market information: EUR/USD spot exchange rate | 0.9876 | 180-day USD risk-free rate | 1.00% | 1180-day EUR risk-free rate | 1.20% | EUR/USD is the amount of EUR per 1 USD. The 180-day EUR/USD forward exchange rate is closest to:",
+  "A": "0.98662.",
+  "B": "0.98858.",
+  "C": "0.98956.",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 84,
+  "stem": "The static trade-off theory of capital structure most likely considers:",
+  "A": "agency costs of equity.",
+  "B": "information asymmetry.",
+  "C": "the tax shield provided by debt.",
+  "correct": "C"
+ },
+ {
+  "session": 1,
+  "n": 85,
+  "stem": "Which of the following can be calculated based on information from the balance sheet only?",
+  "A": "Quick ratio",
+  "B": "Debt coverage",
+  "C": "Receivables turnover ratio",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 86,
+  "stem": "An investor is considering three investments: e Investment 1 makes 20 annual payments of $50,000, starting one year from today. e Investment 2 makes 25 annual payments of $45,000, starting today. ¢ Investment 3 makes annual payments of $40,000 indefinitely, starting one year from EEE if the investor's discount rate is 10% per year, which investment has the highest present value?",
+  "A": "Investment 1",
+  "B": "Investment 2",
+  "C": "Investment 3",
+  "correct": "B"
+ },
+ {
+  "session": 1,
+  "n": 87,
+  "stem": "Which of the. following most likely has the greatest access to capital?",
+  "A": "Corporation _",
+  "B": "Limited partnership",
+  "C": "General partnership",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 88,
+  "stem": "An analyst gathers the following information about a company's capital sources: Target weight of debt | 25% ‘Target weight of equity | 75% Before-tax marginal cost of debt | 4% Marginal cost of equity | 12% If the marginal tax rate is 20% and interest expense is tax deductible, the company's WACC is:",
+  "A": "9.80%.",
+  "B": "10.00%.",
+  "C": "10.25%.",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 89,
+  "stem": "_Ananalyst gathers the following probability distribution of a company's earnings: Probability Earnings ($ millions) 0.25 100 0.70 300 0.05 600 The standard deviation of the company's earnings is closest to:",
+  "A": "$115 million.",
+  "B": "$134 million.",
+  "C": "$375 million.",
+  "correct": "A"
+ },
+ {
+  "session": 1,
+  "n": 90,
+  "stem": "An investor purchases a security for ¥500,000. If the value of the security declines by 10% the first 3-month period and then increases by 9% over the next 3-month period, the period return over the 6-month period is closest to:",
+  "A": "-1.9%.",
+  "B": "-1.0%.",
+  "C": "-0.5%. % over Iding Answers",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 1,
+  "stem": "The price of a European call option is:",
+  "A": "directly related to the price of the underlying and inversely related to volatility of the underlying.",
+  "B": "directly related to volatility of the underlying and inversely related to the dividend yield of the underlying.",
+  "C": "directly related to the dividend yield of the underlying and inversely related to the price of the underlying.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 2,
+  "stem": "An analyst observes the following annual spot rates: | dyear 1.0% —— conan | 2 years 1.1% | | 3 years 1.3% | Based only on this information, the arbitrage-free price of a 3% annual-pay bond with a three-year maturity is closest to:",
+  "A": "104.99. ;",
+  "B": "105.48.",
+  "C": "107.62.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 3,
+  "stem": "With respect to an IPS, which of the following best describes an absolute risk objective for a client's portfolio?",
+  "A": "An annual tracking risk of less than 2 percent",
+  "B": "A twelve-month 95% value at risk of less than €1,000,000",
+  "C": "Maintaining at least €10,000 in cash for planned monthly withdrawals",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 4,
+  "stem": "The average life of a mortgage pass-through security is two years. Six months ago, its average life was five years. Over the last six months, investors in the security have most likely experienced:",
+  "A": "balloon risk.",
+  "B": "extension risk.",
+  "C": "contraction risk.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 5,
+  "stem": "All else being equal, which of the following would lower a company's sustainable growth A(n):",
+  "A": "increased retention rate",
+  "B": "decreased return on total assets",
+  "C": "increased financial leverage ratio",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 6,
+  "stem": "Which of the following statements about real estate investments is most accurate?",
+  "A": "Investors in real estate limited partnerships are exposed to unlimited liability",
+  "B": "Free and clear ownership means that the property is unencumbered by a mortgage",
+  "C": "REITs are required to retain most of their taxable income for future capital expenditures",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 7,
+  "stem": "In the binomial model, if the probability of a downward movement in an underlying the value of a call option:",
+  "A": "decreases.",
+  "B": "remains unchanged.",
+  "C": "increases.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 8,
+  "stem": "Which of the following is best classified as financial risk?",
+  "A": "Market risk",
+  "B": "Longevity risk",
+  "C": "Accounting risk",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 9,
+  "stem": "For portfolio managers of active funds, market indexes are least useful as:",
+  "A": "benchmarks.",
+  "B": "model portfolios.",
+  "C": "proxies to measure risk-adjusted performance.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 10,
+  "stem": "Which of the following is most likely an element of industry and competitive analysis?",
+  "A": "Analyzing market share trends",
+  "B": "Determining forecast objects and approaches",
+  "C": "Analyzing uses of capital and sources of financing",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 11,
+  "stem": "puration is most accurate as a measure of interest rate risk for a bond portfolio when the slope of the yield curve:",
+  "A": "decreases.",
+  "B": "stays the same.",
+  "C": "increases.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 12,
+  "stem": "Which of the following most likely exhibits negative convexity? .",
+  "A": "A callable bond",
+  "B": "A putable bond",
+  "C": "An option-free bond",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 13,
+  "stem": "[fasecurity’s return is plotted to the right of the market portfolio on the security market line, the security has a:",
+  "A": "lower expected return and lower systematic risk than the market portfolio.",
+  "B": "higher expected return and higher systematic risk than the market portfolio.",
+  "C": "higher expected return and higher unsystematic risk than the market portfolio.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 14,
+  "stem": "Emotional biases:",
+  "A": "stem from impulses and intuition.",
+  "B": "result in the same decision as assumed by traditional finance theory.",
+  "C": "are more easily corrected through better information than cognitive biases.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 15,
+  "stem": "Which of the following is most advantageous to the general partner of a private equity fund assuming no clawback provision?",
+  "A": "American waterfall",
+  "B": "European waterfall",
+  "C": "Whole-of-fund waterfall",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 16,
+  "stem": "An investor buys a stock for $108 on margin by posting 40% of the initial stock price as equity. If a margin call first occurs when the the maintenance margin requirement for the position is 20%, price falls below:",
+  "A": "$64.80.",
+  "B": "$81.00.",
+  "C": "$86.40.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 17,
+  "stem": "Which of the following derivative contracts most likely requires an upfront payment by the buyer at contract initiation?",
+  "A": "Options only",
+  "B": "Forwards only",
+  "C": "Both options and forwards",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 18,
+  "stem": "Making a minority equity investment in a mature company that plans to expand operations best describes:",
+  "A": "growth capital investing.",
+  "B": "leveraged buyout investing.",
+  "C": "development capital investing.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 19,
+  "stem": "Arbitrage is best described as an opportunity to earn:",
+  "A": "risk-free returns with no investment capital.",
+  "B": "risk-free returns with large amounts of investment capital.",
+  "C": "abnormal returns applying an absolute valuation methodology.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 20,
+  "stem": "Which of the following transactions is most likely to affect a company’s financial leverage",
+  "A": "Payment of a 9% stock dividend",
+  "B": "An increase in cash dividends paid",
+  "C": "Completion of a previously announced 1-for-20 reverse stock split",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 21,
+  "stem": "All else being equal, non-cumulative preference shares most likely:",
+  "A": "offer dividends that are less than common shares.",
+  "B": "have a claim on net assets upon liquidation of the company.",
+  "C": "receive any past unpaid dividends prior to dividends being paid to common shareholders.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 22,
+  "stem": "As one moves to the right along an investor’s efficient frontier, a set increase in risk is most likely to lead to:",
+  "A": "sequentially smaller increases in expected return.",
+  "B": "consistent increases in expected return. eee ee E",
+  "C": "sequentially larger increases in expected return.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 23,
+  "stem": "Risk-averse investors make investment decisions that maximize:",
+  "A": "both return and risk.",
+  "B": "return irrespective of risk.",
+  "C": "return for the same amount of risk.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 24,
+  "stem": "which of the following is most likely a factor that results in different credit ratings for debt issued by a subsidiary and debt issued by its parent company?",
+  "A": "Differences in duration",
+  "B": "Structural subordination",
+  "C": "Cross-default provisions",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 25,
+  "stem": "An analyst gathers the following information about an index with a starting value of 1,000: Year Price Return Dividend Return 1 4% 2% 2 6% 3% |",
+  "A": "1,102.",
+  "B": "1,150.",
+  "C": "1,155.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 26,
+  "stem": "An analyst gathers the following information about three bonds: Bond Payment Frequency Principal Amortization 1 Monthly Yes 2 Quarterly Yes 3 Monthly No All else being equal, the bond with the greatest reinvestment risk is most likely:",
+  "A": "Bond 1.",
+  "B": "Bond 2.",
+  "C": "Bond 3.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 27,
+  "stem": "nthe In an equally weighted portfolio of many assets, an increase in the correlation betwee assets! returns most likely decreases the portfolios:",
+  "A": "overall risk.",
+  "B": "expected return.",
+  "C": "diversification benefit.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 28,
+  "stem": "Which of the following best describes an advantage of the EV/EBITDA multiple for valuing equity? An advantage is that:",
+  "A": "the multiple must be positive.",
+  "B": "EBITDA is a proxy for operating cash flow.",
+  "C": "it does not require the market value of debt.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 29,
+  "stem": "The value of a swap contract at initiation is most likely equal to:",
+  "A": "zero.",
+  "B": "the price of the swap.",
+  "C": "the present value of the fixed payments on the swap.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 30,
+  "stem": "All else being equal, a cash dividend most likely has the same effect on shareholders’ a: .",
+  "A": "stock split.",
+  "B": "stock dividend.",
+  "C": "share repurchase.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 31,
+  "stem": "An arbitrage opportunity most likely exists if the price of a put option is less than the cost of:",
+  "A": "buying the underlying asset, buying the call, and buying a risk-free bond at the present of the exercise price.",
+  "B": "shorting the underlying asset, buying the call, and buying a risk-free bond at the present of the exercise price.",
+  "C": "shorting the underlying asset, buying the call, and shorting a risk-free bond at the value of the exercise price.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 32,
+  "stem": "An analysis of the competitive positioning such as Porter's five forces is typically included",
+  "A": "an initial company research report only.",
+  "B": "a subsequent company research report only.",
+  "C": "both initial and subsequent company research reports.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 33,
+  "stem": "With respect to private equity funds, quartile rankings:",
+  "A": "are rarely used for performance evaluation.",
+  "B": "include comparisons of different investment strategies.",
+  "C": "are based on funds launched in the same vintage year.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 34,
+  "stem": "Ina semi-strong-form efficient market, which of the following is reflected in prices?",
+  "A": "Past market data only",
+  "B": "Private information only",
+  "C": "Both past market data and private information",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 35,
+  "stem": "Ifa quarterly pay bond has an effective annual rate of 10%, the semiannual bond equivalent yield for this bond is closest to:",
+  "A": "9.76%.",
+  "B": "10.13%.",
+  "C": "10.25%.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 36,
+  "stem": "Which of the following positions requires the investor to satisfy an obligation upon option exercise?",
+  "A": "Short put position",
+  "B": "Long put position",
+  "C": "Long call position",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 37,
+  "stem": "Which of the following statements concerning a security market index is most accurate? alue",
+  "A": "Estimated market prices of constituent securities are not used to calculate the index v:",
+  "B": "The divisor will be adjusted to prevent changes not related to prices of constituent securities",
+  "C": "At inception, the total return version of an index will be greater than the price version of an index",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 38,
+  "stem": "Which of the following best characterizes an interest rate swap?",
+  "A": "A contingent claim derivative using Libor rates as reference rates",
+  "B": "A contingent claim derivative used to convert interest rate exposure from fixed-rate to floating-rate",
+  "C": "A firm commitment derivative used by investment managers to change portfolio duration without trading bonds",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 39,
+  "stem": "Which of the following is best classified as a nonsystematic risk?",
+  "A": "Political uncertainty",
+  "B": "Widespread natural disasters",
+  "C": "Bankruptcy of a major automobile producer",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 40,
+  "stem": "An analyst gathers the following information about a company's preferred shares: Par value $100.00 | Annual dividend per share $6.00 Current market price $85.71 | Maturity 10 years | If the required rate of return is 7% and the company's marginal tax rate is 30%, the preferred shares are most likely:",
+  "A": "undervalued.",
+  "B": "fairly valued.",
+  "C": "overvalued.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 41,
+  "stem": "Which of the following transactions poses the risk of losing the greatest dollar amount?",
+  "A": "Selling a put with a strike price of $15 for $0.90",
+  "B": "Buying a call with a strike price of $15 for $11.25",
+  "C": "Buying a put with a strike price of $37.50 for $12.75",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 42,
+  "stem": "When securitizing a corporation’s loans, a special purpose entity most likely:",
+  "A": "services the corporation’s loans.",
+  "B": "sells the collateral underlying the corporation’s loans.",
+  "C": "purchases the corporation’s loans to use as collateral.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 43,
+  "stem": "All else being equal, which of the following securities is the most risky for an investor?",
+  "A": "Putable preference shares ee ee",
+  "B": "Callable preference shares",
+  "C": "Non-callable preference shares",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 44,
+  "stem": "An investor analyzes the stock market of a specific country and discovers that the stock prices are very slow to reflect new information. The investor can best profit from this situation using a(n):",
+  "A": "active fund.",
+  "B": "passive fund.",
+  "C": "low cost approach.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 45,
+  "stem": "Ifa bond has a modified duration of 7.1 and convexity of 49.2, the percentage change in price for a 50 basis point increase in yield is closest to:",
+  "A": "-3.61%.",
+  "B": "-3.49%.",
+  "C": "-1.65%.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 46,
+  "stem": "An analyst gathers the following information about a portfolio: ‘ wae Portfolio Security Standard Deviation Weight A 16% 60% B 27% 40% If the portfolio's standard deviation of returns is 20.4%, the correlation between the securities is closest to:",
+  "A": "-1.",
+  "B": "0.",
+  "C": "1.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 47,
+  "stem": "The capital asset pricing model (CAPM) is based on the assumption that investors are risk:",
+  "A": "averse.",
+  "B": "neutral.",
+  "C": "seeking.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 48,
+  "stem": "A buy-and-hold investor purchases a fixed-rate bond at issuance and holds it until maturity. With respect to interest rate risk, this investor is exposed to:",
+  "A": "market price risk only.",
+  "B": "coupon reinvestment risk only.",
+  "C": "both market price risk and coupon reinvestment risk.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 49,
+  "stem": "The value effect anomaly:",
+  "A": "contradicts semi-strong market efficiency.",
+  "B": "was identified using time series of data only.",
+  "C": "states that growth stocks have consistently outperformed value stocks.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 50,
+  "stem": "A bond's price sensitivity to a non-parallel shift in the benchmark yield curve is best measured by:",
+  "A": "key rate duration.",
+  "B": "effective duration.",
+  "C": "modified duration.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 51,
+  "stem": "Which of the following instruments is most likely to offer investors some protection against increases in the market interest rate?",
+  "A": "Fixed-rate bonds",
+  "B": "Floating-rate notes",
+  "C": "Inverse floating-rate notes",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 52,
+  "stem": "An investor gathers the following information about a portfolio and the risk-free asset: Average portfolio return 8.50% Portfolio standard deviation of returns 16.00% Portfolio beta 1.10 Risk-free asset return 1.75% The portfolio's Sharpe ratio is closest to: NN",
+  "A": "0.06.",
+  "B": "0.42.",
+  "C": "0.53.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 53,
+  "stem": "ent time horizon Which of the following types of investors most likely has a long-term investm and high liquidity needs?",
+  "A": "Endowments",
+  "B": "Life insurance companies",
+  "C": "Defined benefit pension plans",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 54,
+  "stem": "ch of the following bonds most likely has the lowest price? All else being equal, whi",
+  "A": "Putable bond",
+  "B": "Callable bond",
+  "C": "Option-free bond",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 55,
+  "stem": "e from Standard & Poor's or Fitch, the lowest rating for an investment-grade Using the rating scal bond is:",
+  "A": "BBB-.",
+  "B": "BBB.",
+  "C": "BBB+.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 56,
+  "stem": "e highest achievable return fora Ifa risk-free asset is added to a portfolio of risky assets, th given level of risk most likely:",
+  "A": "decreases.",
+  "B": "remains unchanged.",
+  "C": "increases.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 57,
+  "stem": "describes the relationship between the net costs of Which of the following statements best carry and the forward price? fits, the forward price would be lower",
+  "A": "If the costs of carry exceed the bene d the benefits, the forward price would be higher",
+  "B": "If the costs of carry excee uld be higher",
+  "C": "If the benefits exceed the costs of carry, the forward price wo!",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 58,
+  "stem": "A European call option is in the money whenever the value of the underlying is:",
+  "A": "less than the exercise price.",
+  "B": "equal to the exercise price.",
+  "C": "greater than the exercise price.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 59,
+  "stem": "Compared to trading an underlying directly, trading a derivative on the underlying most likely involves:",
+  "A": "lower transaction costs.",
+  "B": "a lower degree of leverage.",
+  "C": "a larger amount of required capital.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 60,
+  "stem": "Which of the following statements about alternative investments’ compensation structures is most accurate?",
+  "A": "A hurdle rate protects clients from paying twice for the same performance",
+  "B": "The management fee for a private equity fund is based on committed capital until fully",
+  "C": "The management fee is earned only after the fund achieves a return known as a high-water mark",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 61,
+  "stem": "According to put—call forward parity, a long put is equal to:",
+  "A": "a long call, a long risk-free bond and a long forward.",
+  "B": "a long call, a long risk-free bond and a short forward.",
+  "C": "a short call, a long risk-free bond and a short forward.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 62,
+  "stem": "An analyst gathers the following information about a margin transaction: Initial stock price $80 Leverage ratio [25 If the first margin call occurs at a stock price below $60, the maintenance margin is closest to:",
+  "A": "15.0%.",
+  "B": "20.0%.",
+  "C": "46.7%. ee",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 63,
+  "stem": "An analyst uses a valuation model to estimate the value of an option-free bond at 92.733 to yield 11%. If the value is 94.474 for a 60 bps decrease in yield and 91.041 for a 60 bps increase in yield, the approximate modified duration of the bond is closest to:",
+  "A": "1.85.",
+  "B": "3.09.",
+  "C": "6.17.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 64,
+  "stem": "A hedge fund that implements trades based on a top-down analysis of expected movements in economic variables most likely uses a(n):",
+  "A": "macro strategy.",
+  "B": "relative value strategy.",
+  "C": "event-driven strategy.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 65,
+  "stem": "An analyst gathers the following information about three bonds: Bond Issuer Credit Rating Total Issuer Debt ($ Billions) 1 B 1 2 BB 1 3 BB 30 All else being equal, the bond with the greatest market liquidity risk is most likely:",
+  "A": "Bond 1.",
+  "B": "Bond 2.",
+  "C": "Bond 3.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 66,
+  "stem": "Four years ago, a 5% coupon, annual-pay bond with a 10-year maturity was issued at par. If the current market discount rate is 7%, the price of the bond per 100 of par value is closest to:",
+  "A": "90.34.",
+  "B": "90.47.",
+  "C": "93.23.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 67,
+  "stem": "In an investment policy statement, which of the following investment constraints most likely outlines a client's preference for environmentally sustainable investments?",
+  "A": "Time horizon",
+  "B": "Unique circumstances",
+  "C": "Legal and regulatory factors",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 68,
+  "stem": "h to appointing and For an institutional investor, the investment committee's approac investment managers for the portfolio is most likely set out during the:",
+  "A": "portfolio construction process.",
+  "B": "strategic asset allocation decision.",
+  "C": "preparation of the investment policy statement.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 69,
+  "stem": "the percentage price change for a given yield All else being equal, for option-free bonds, is most likely greater for a bond:",
+  "A": "with a high coupon than for a bond with a low coupon.",
+  "B": "with a short time-to-maturity than for a bond with a long time-to-maturity.",
+  "C": "when the market discount rate goes down than when the market discount rate goes up.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 70,
+  "stem": "Which of the following statements is most accurate? Smart beta strategies:",
+  "A": "invest in high market beta stocks to generate an abnormal return.",
+  "B": "use simple rules-based strategies as a basis for investment decisions. ve lower portfolio turnover than passive market-cap weighted strategies.",
+  "C": "typically ha",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 71,
+  "stem": "An analyst gathers the following information about a hedge fund: £200,000,000 Beginning-of-year assets under management (AUM) 2% Management fee (based on end-of-year AUM before fees) 10% Incentive fee 5% oft hurdle rate 20% nnual return before fees pendently of the management fee, total fees for the If the incentive fee is calculated inde are:",
+  "A": "£7,800,000.",
+  "B": "£8,320,000.",
+  "C": "£8,800,000.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 72,
+  "stem": "Which of the following is most likely one of the main functions of the financial system?",
+  "A": "Determining an equilibrium interest rate",
+  "B": "Ensuring that markets are informationally efficient NN",
+  "C": "Ensuring that all investment projects receive sufficient funding",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 73,
+  "stem": "kely a distinction between futures and forward contracts? Which of the following is most li Futures contracts are:",
+  "A": "easily customized.",
+  "B": "traded on an exchange. long positions when futures prices are negatively correlated",
+  "C": "more attractive than forwards for to interest rates.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 74,
+  "stem": "long-term benefit of adding alternative investments to a Which of the following is most likely a portfolio of traditional investments?",
+  "A": "Enhanced liquidity of the combined portfolio",
+  "B": "High correlation with traditional asset returns",
+  "C": "Improved risk-return profile of the combined portfolio",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 75,
+  "stem": "f the following mortgage structures exposes a lender to the In the event of a default, which o greatest risk of loss?",
+  "A": "Interest-only, recourse loan",
+  "B": "Fully amortizing, recourse loan",
+  "C": "Balloon payment, non-recourse loan",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 76,
+  "stem": "sting is most Which of the following statements about infrastructure inve: accurate? Infrastructure:",
+  "A": "assets are typically unlevered.",
+  "B": "assets are intended for public use.",
+  "C": "cash flows typically have a negative correlation with inflation.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 77,
+  "stem": "don’s constant growth dividend discount model to An investor uses the following data and Gor h, she uses the average of the: evaluate a company’s common stock. To estimate growt! f Year 1 to 1. average value of the compounded annual dividend growth rate over the period o Year 6, and< 2. dividend payout ratio for Year 6. Year Earnings per Share Dividend per Share Return on Equity 6 $3.20 $1.92 12% 5 $3.60 $1.85 17% 4 $2.44 $1.74 13% 3 $2.08 $1.62 15% 2 $2.76 $1.35 11% 1 $2.25 $1.25 9% If her required return is 15%, the stock’s intrinsic value is closest to:",
+  "A": "$25.31.",
+  "B": "$23.71.",
+  "C": "$30.14. Questiocn 78 Which of the following is least likely a component of yield spread? A. Taxation B. Credit risk C. Expected inflation rate",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 78,
+  "stem": "Which of the following is least likely a component of yield spread?",
+  "A": "Taxation",
+  "B": "Credit risk",
+  "C": "Expected inflation rate",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 79,
+  "stem": "The earnings multiplier for a stock increases with a decrease in the:",
+  "A": "expected dividend growth rate.",
+  "B": "expected dividend payout ratio.",
+  "C": "estimated required rate of return on equity.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 80,
+  "stem": "The most appropriate measure of interest rate risk for a bond to a parallel shift in the benchmark yield curve is:",
+  "A": "effective duration.",
+  "B": "modified duration.",
+  "C": "Macaulay duration.",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 81,
+  "stem": "Asuccessful portfolio risk budget will most likely:",
+  "A": "be based on multiple sources of risk.",
+  "B": "produce superior performance compared to passive investing.",
+  "C": "lead to investment in assets with the highest return per unit of risk.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 82,
+  "stem": "In an order-driven market, if the trade price is determined by the limit price of an order, the market most likely operates under the:",
+  "A": "uniform pricing rule.",
+  "B": "derivative pricing rule.",
+  "C": "discriminatory pricing rule.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 83,
+  "stem": "An investor sells a European put option with the following characteristics: Put price 50 Exercise price 1,640 f the price of the underlying at expiration is 1,670, the profit for the seller is:",
+  "A": "20.",
+  "B": "30.",
+  "C": "50.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 84,
+  "stem": "Validity instructions indicate:",
+  "A": "how to fill an order.",
+  "B": "when an order may be filled.",
+  "C": "how to arrange final settlement of an order.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 85,
+  "stem": "When the forward price of a commodity exceeds the spot price, the commodity market is most likely in:",
+  "A": "carry.",
+  "B": "contango.",
+  "C": "backwardation. a",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 86,
+  "stem": "Which of the following is private debt funding used by companies that are in the seed stage of their life cycle?",
+  "A": "Venture debt",
+  "B": "Direct lending",
+  "C": "Mezzanine financing",
+  "correct": "A"
+ },
+ {
+  "session": 2,
+  "n": 87,
+  "stem": "For a fixed-rate bond, Macaulay duration is:",
+  "A": "unrelated to the bond’s yield-to-maturity.",
+  "B": "inversely related to the bond’s yield-to-maturity.",
+  "C": "positively related to the bond’s yield-to-maturity.",
+  "correct": "B"
+ },
+ {
+  "session": 2,
+  "n": 88,
+  "stem": "With respect to portfolio construction, combining long-term capital market expectations with the objectives and constraints from the investment policy statement determines a portfolio's:",
+  "A": "security selection.",
+  "B": "tactical asset allocation.",
+  "C": "strategic asset allocation.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 89,
+  "stem": "The correlation of cryptocurrencies with traditional assets has been:",
+  "A": "decreasing.",
+  "B": "steady.",
+  "C": "increasing.",
+  "correct": "C"
+ },
+ {
+  "session": 2,
+  "n": 90,
+  "stem": "_ |Initial investment capital $100 million Return at the end of one year 12% Management fee based on assets under management 1% lincentive fee based on the return net of the management fee 10% Assume management fees are calculated using end-of-period valuation. The investor’s net return given this fee structure is closest to:",
+  "A": "9.68%.",
+  "B": "9.79%.",
+  "C": "10.88%. Answers",
+  "correct": "B"
+ }
+]

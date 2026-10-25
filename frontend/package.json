@@ -1,0 +1,30 @@
+{
+  "name": "cfa-platform-frontend",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "dexie": "^4.4.7",
+    "lucide-react": "^1.61.0",
+    "next": "latest",
+    "pdfjs-dist": "^6.4.299",
+    "react": "latest",
+    "react-dom": "latest",
+    "tesseract.js": "^7.0.0",
+    "zustand": "^5.0.16"
+  },
+  "devDependencies": {
+    "tailwindcss": "latest",
+    "tsx": "^4.23.15",
+    "typescript": "latest",
+    "vitest": "^5.0.5"
+  }
+}
