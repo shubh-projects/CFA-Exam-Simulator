@@ -56,7 +56,7 @@ export default function HomePage() {
     setIsLoading(true); setError(null);
     try {
       const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs"); pdfjs.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.min.mjs";
-      const pdf = await pdfjs.getDocument({ data: await file.arrayBuffer() }).promise;
+      const pdf = await pdfjs.getDocument({ data: await file.arrayBuffer(), wasmUrl: "/pdfjs/wasm/" }).promise;
       if (pdf.numPages > 150) setError("Large PDF: more than 150 pages.");
       const direct: Record<string, string> = {}; const ocr: Array<{ page: number; image: HTMLCanvasElement }> = [];
       const jobId = crypto.randomUUID();

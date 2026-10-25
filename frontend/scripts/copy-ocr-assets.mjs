@@ -24,6 +24,8 @@ await Promise.all([
   cp(corePackageDirectory, coreDirectory, { recursive: true, filter: (source) => /tesseract-core.*\.(?:js|wasm)$/.test(source) || source === corePackageDirectory }),
   cp(join(languageDirectory, "4.0.0", "eng.traineddata.gz"), join(langDirectory, "eng.traineddata.gz")),
   cp(join(pdfDirectorySource, "legacy", "build", "pdf.worker.min.mjs"), join(pdfDirectory, "pdf.worker.min.mjs")),
+  // JBIG2 / JPEG2000 decoders: scanned PDFs are often JBIG2-compressed and render blank without these
+  cp(join(pdfDirectorySource, "wasm"), join(pdfDirectory, "wasm"), { recursive: true }),
 ]);
 
 console.log("Copied local Tesseract and PDF.js workers into public/.");
