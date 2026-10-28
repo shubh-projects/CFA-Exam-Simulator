@@ -1,9 +1,9 @@
 import { withTopic } from "./topics";
 import type { AnswerOption, OcrPages, ParseResult, ParsedQuestion } from "./types";
 
-const HEADER = /Session\s*([12])\s*[-–—]\s*(Questions?|Answers?)/i;
-const NOISE = /Mahakali\s+Book\s+Centre/i;
-const marker = (word: "Question" | "Answer") => new RegExp(`^\\W*(?:\\w{1,4}\\s+)?${word}\\s+(\\d{1,2})\\b[\\s:;.,|'’]*[A-Za-z]?\\W*$`, "i");
+export const HEADER = /Session\s*([12])\s*[-–—]\s*(Questions?|Answers?)/i;
+export const NOISE = /Mahakali\s+Book\s+Centre/i;
+export const marker = (word: "Question" | "Answer") => new RegExp(`^\\W*(?:\\w{1,4}\\s+)?${word}\\s+(\\d{1,2})\\b[\\s:;.,|'’]*[A-Za-z]?\\W*$`, "i");
 const optionPattern: Record<AnswerOption, RegExp> = {
   A: /(?:^|[\s_|])([Aa])[\.,\)]\s*/m,
   B: /(?:^|[\s_|])([Bbg8])[\.,\)]\s*/m,
@@ -43,7 +43,7 @@ export function similarity(left: string, right: string): number {
 
 const looseA = /(?:^|[\s_|])([Aa])(?:[\.,\)]\s*|\s+(?=[\d$£€(−-]))/m; // "| A 1,102." (dot lost by OCR) - used only as a fallback
 
-function parseQuestion(lines: string[]): { stem: string; options: Partial<Record<AnswerOption, string>> } {
+export function parseQuestion(lines: string[]): { stem: string; options: Partial<Record<AnswerOption, string>> } {
   const strict = parseQuestionWith(lines, optionPattern);
   if (strict.options.A && strict.options.B && strict.options.C) return strict;
   const loose = parseQuestionWith(lines, { ...optionPattern, A: looseA });
@@ -70,7 +70,7 @@ function parseQuestionWith(lines: string[], patterns: Record<AnswerOption, RegEx
   return { stem: text.slice(0, spans.A[0]).replace(/\s+/g, " ").trim(), options };
 }
 
-function parseAnswer(lines: string[]): [AnswerOption | null, string] {
+export function parseAnswer(lines: string[]): [AnswerOption | null, string] {
   const text = lines.join(" "); const found = /^(?:[^\s]{1,3}\s*)?(?:([ABCabc])[\.\)]\s*|([ABC])(?=\d))(.*)/.exec(text);
   return found ? [(found[1] ?? found[2]).toUpperCase() as AnswerOption, found[3].trim()] : [null, text];
 }
@@ -80,7 +80,32 @@ function keySimilarity(option: string, keyText: string): number {
   return Math.max(similarity(option, keyText), similarity(option, keyText.slice(0, option.length + 3)));
 }
 
-export function parseOcrPages(pages: OcrPages): ParseResult {
+/**
+ * Last-resort key lookup for blocks whose options came out merged or unlabelled (e.g. "negative. Bg, zero. C. positive.").
+ * Finds the printed key text anywhere in the whole question block, then reads the letter from the option label in front of it.
+ */
+export function locateKeyInBlock(lines: string[], keyText: string): AnswerOption | null {
+  const text = lines.join(" ").replace(/\s+/g, " ").trim(); const key = keyText.replace(/\s+/g, " ").trim().slice(0, 80);
+  if (normalize(key).length < 3 || text.length < key.length) return null;
+  const labels: Array<{ at: number; letter: AnswerOption }> = [];
+  const re = /(?:^|[\s_|])(Bg|Ec|[ABC]|[¢©]c?)(?:[\.,\)]|(?=\s))(?=\s|$)/g; let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) { const raw = m[1]; const letter: AnswerOption = raw[0] === "A" ? "A" : raw[0] === "B" ? "B" : "C"; if (/^[ABC]$/.test(raw) && !/[\.,\)]/.test(m[0])) continue; labels.push({ at: m.index + m[0].indexOf(raw), letter }); }
+  if (!labels.length) return null;
+  let best = 0; let bestAt = -1;
+  for (let i = 0; i + 3 <= text.length; i += 1) {
+    if (i > 0 && text[i - 1] !== " ") continue;
+    const score = Math.max(similarity(text.slice(i, i + key.length), key), similarity(text.slice(i, i + key.length + 4), key));
+    if (score > best) { best = score; bestAt = i; }
+  }
+  if (best < 0.8 || bestAt < 0) return null;
+  const before = labels.filter((l) => l.at < bestAt);
+  if (before.length) return before[before.length - 1].letter;
+  // No label in front: the "A." label was lost. Only trust that if the text sits after the question sentence and the next label is B.
+  const stemEnd = Math.max(text.lastIndexOf("?", labels[0].at), text.lastIndexOf(":", labels[0].at));
+  return labels[0].letter === "B" && bestAt > stemEnd ? "A" : null;
+}
+
+export function parseOcrPages(pages: OcrPages, opts: { subject?: string } = {}): ParseResult {
   const sections: Array<Section | null> = []; let current: Section | null = null;
   const indexed = Object.entries(pages).sort(([a], [b]) => Number(a) - Number(b));
   indexed.forEach(([, text]) => { const found = HEADER.exec(text.slice(0, 300)) ?? HEADER.exec(text); if (found) current = { session: Number(found[1]) as 1 | 2, kind: found[2][0].toLowerCase() as "q" | "a" }; sections.push(current); });
@@ -105,9 +130,10 @@ export function parseOcrPages(pages: OcrPages): ParseResult {
     const qs = blocks.get(`${session}:q`) ?? new Map(); const keys = blocks.get(`${session}:a`) ?? new Map();
     for (const [n, item] of [...qs.entries()].sort(([a], [b]) => a - b)) {
       const parsed = parseQuestion(item.lines); const [letter, keyText] = keys.has(n) ? parseAnswer(keys.get(n)!.lines) : [null, ""];
-      let correct = letter; let status: ParsedQuestion["status"] = "ok"; let reason: string | undefined;
-      if (!parsed.options.A || !parsed.options.B || !parsed.options.C) { status = "needs_review"; reason = "One or more answer options could not be read."; }
-      if (!keyText) { status = "needs_review"; reason = reason ?? "Answer key entry is missing or unreadable."; }
+      let correct = letter; let status: ParsedQuestion["status"] = "ok"; let reason: string | undefined; let keyIssue: string | undefined;
+      const optionsUnread = !parsed.options.A || !parsed.options.B || !parsed.options.C;
+      if (optionsUnread) { status = "needs_review"; reason = "One or more answer options could not be read."; }
+      if (!keyText) { status = "needs_review"; keyIssue = "Answer key entry is missing or unreadable."; reason = reason ?? keyIssue; }
       else {
         const scored = (Object.keys(parsed.options) as AnswerOption[]).map((key) => [key, keySimilarity(parsed.options[key]!, keyText)] as const).sort((a, b) => b[1] - a[1]);
         const own = letter && parsed.options[letter] ? keySimilarity(parsed.options[letter]!, keyText) : 0;
@@ -115,9 +141,15 @@ export function parseOcrPages(pages: OcrPages): ParseResult {
         const clearlyBeaten = bestScore >= 0.95 && bestScore - own >= 0.25 && scored[0][0] !== letter; // another option matches the printed text almost exactly
         if (letter && own >= 0.6 && !clearlyBeaten) correct = letter;
         else if (scored[0] && bestScore >= 0.85) { correct = scored[0][0]; if (correct !== letter) { status = "corrected"; reason = "Printed answer letter corrected to match answer text."; } }
-        else { status = "needs_review"; reason = reason ?? "Answer key text does not match any option confidently."; }
+        else if (letter && optionsUnread) { correct = letter; } // option text unreadable, so the printed letter is all we have
+        else if (scored[0] && bestScore >= 0.7 && bestScore - (scored[1]?.[1] ?? 0) >= 0.12) { correct = scored[0][0]; if (correct !== letter) { status = "corrected"; reason = "Printed answer letter corrected to match answer text."; } }
+        else {
+          const found = locateKeyInBlock(item.lines, keyText);
+          if (found) { correct = found; if (found !== letter) { status = "corrected"; reason = "Printed answer letter corrected to match answer text."; } }
+          else { status = "needs_review"; keyIssue = "Answer key text does not match any option confidently."; reason = reason ?? keyIssue; }
+        }
       }
-      questions.push(withTopic({ id: `${session}-${n}`, session, n, stem: parsed.stem, A: parsed.options.A ?? "", B: parsed.options.B ?? "", C: parsed.options.C ?? "", correct, status, reason, sourcePage: item.page, keyPage: keys.get(n)?.page }));
+      questions.push(withTopic({ id: `${session}-${n}`, session, n, stem: parsed.stem, A: parsed.options.A ?? "", B: parsed.options.B ?? "", C: parsed.options.C ?? "", correct, status, reason, sourcePage: item.page, keyPage: keys.get(n)?.page, optionsUnread, keyIssue }, opts.subject));
     }
   }
   return { questions, inferredSessions: !sections.some(Boolean) };

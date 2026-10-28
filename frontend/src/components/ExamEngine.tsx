@@ -12,6 +12,9 @@ import {
 } from "lucide-react";
 
 import { FinishDialog } from "./FinishDialog";
+import { QuestionImage } from "./QuestionImage";
+import { hasPageSource } from "../lib/pipeline/pageSource";
+import type { QuestionCrop } from "../lib/pipeline/types";
 import {
   type AnswerOption,
   type ExamQuestion,
@@ -90,6 +93,7 @@ function QuestionText({ content }: { content?: string | null }) {
 export function ExamEngine() {
   const [isNavigatorOpen, setIsNavigatorOpen] = useState(false);
   const [isFinishOpen, setIsFinishOpen] = useState(false);
+  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
   const {
     examData,
     currentSession,
@@ -102,7 +106,10 @@ export function ExamEngine() {
     toggleFlag,
     logTimeSpent,
     finishSession,
+    mode,
+    practiceSubject,
   } = useExamStore();
+  const practice = mode === "practice";
 
   const sessionQuestions = useMemo(() => {
     const matchingQuestions = (examData as QuestionContent[]).filter((question) => {
@@ -116,6 +123,7 @@ export function ExamEngine() {
   const currentQuestion = sessionQuestions[currentQuestionIndex];
   const currentQuestionId = currentQuestion?.id;
   const table = getTableView(currentQuestion?.table_data);
+  const imageMode = Boolean(currentQuestion && currentQuestion.showImage === true && currentQuestion.crop && hasPageSource() && !failedImages[currentQuestion.id]);
   const isFinalQuestion = currentQuestionIndex === sessionQuestions.length - 1;
   const answeredCount = sessionQuestions.filter((question) => Boolean(answers[question.id])).length;
   const flaggedCount = sessionQuestions.filter((question) => Boolean(flags[question.id])).length;
@@ -184,7 +192,7 @@ export function ExamEngine() {
     <main className="flex h-screen min-h-[42rem] flex-col overflow-hidden bg-slate-100 text-slate-900">
       <header className="flex min-h-16 items-center justify-between gap-4 bg-slate-900 px-5 text-sm shadow-lg sm:px-7">
         <div className="font-semibold text-slate-100">
-          <div>Question {currentQuestionIndex + 1} of {sessionQuestions.length}<span className="mx-3 text-slate-500">|</span>Session {currentSession}</div>
+          <div>Question {currentQuestionIndex + 1} of {sessionQuestions.length}<span className="mx-3 text-slate-500">|</span>{practice ? (practiceSubject ?? "Practice") : `Session ${currentSession}`}</div>
           <div className="mt-1 flex items-center gap-3 text-[11px] font-bold uppercase tracking-wide">
             <span className="text-emerald-300">Answered {answeredCount}/{sessionQuestions.length}</span>
             <span className="inline-flex items-center gap-1 text-yellow-300"><Flag size={12} fill="currentColor" /> Flagged {flaggedCount}</span>
@@ -198,7 +206,7 @@ export function ExamEngine() {
 
         <div className="flex items-center gap-2">
           <button type="button" onClick={() => setIsNavigatorOpen(true)} className="inline-flex items-center gap-1 rounded border border-slate-500 bg-slate-800 px-3 py-2 text-xs font-bold uppercase tracking-wide text-white"><ListChecks size={15} /> Navigator</button>
-          <button type="button" onClick={() => setIsFinishOpen(true)} className="rounded border border-slate-500 bg-slate-800 px-3 py-2 text-xs font-bold uppercase tracking-wide text-white transition hover:border-red-400 hover:bg-red-950 focus:outline-none focus:ring-2 focus:ring-red-400">Finish Section</button>
+          <button type="button" onClick={() => setIsFinishOpen(true)} className="rounded border border-slate-500 bg-slate-800 px-3 py-2 text-xs font-bold uppercase tracking-wide text-white transition hover:border-red-400 hover:bg-red-950 focus:outline-none focus:ring-2 focus:ring-red-400">{practice ? "Finish Exam" : "Finish Section"}</button>
         </div>
       </header>
 
@@ -251,9 +259,11 @@ export function ExamEngine() {
               <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Question {currentQuestionIndex + 1}</span>
               {flags[currentQuestion.id] && <span className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-3 py-1 text-xs font-bold text-yellow-900"><Flag size={13} fill="currentColor" /> Flagged for review</span>}
             </div>
-            <QuestionText content={currentQuestion.stem} />
+            {imageMode
+              ? <QuestionImage key={currentQuestion.id} crop={currentQuestion.crop as QuestionCrop} onFail={() => setFailedImages((f) => ({ ...f, [currentQuestion.id]: true }))} />
+              : <QuestionText content={currentQuestion.stem} />}
 
-            {table && (
+            {!imageMode && table && (
               <div className="my-7 overflow-x-auto rounded border border-slate-300">
                 <table className="min-w-full border-collapse text-left text-sm">
                   <thead className="bg-slate-100 text-slate-700">
@@ -280,9 +290,9 @@ export function ExamEngine() {
               </div>
             )}
 
-            <QuestionText content={currentQuestion.stem_after} />
+            {!imageMode && <QuestionText content={currentQuestion.stem_after} />}
 
-            <div className="mt-10 space-y-3" role="radiogroup" aria-label="Answer choices">
+            <div className={imageMode ? "mt-8 grid grid-cols-3 gap-3" : "mt-10 space-y-3"} role="radiogroup" aria-label="Answer choices">
               {optionLabels.map((option) => {
                 const optionText = {
                   A: currentQuestion.option_a ?? currentQuestion.A,
@@ -298,7 +308,7 @@ export function ExamEngine() {
                     role="radio"
                     aria-checked={isSelected}
                     onClick={() => selectOption(currentQuestion.id, option)}
-                    className={`flex w-full items-start gap-4 rounded-md border-2 p-4 text-left text-base transition focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    className={`flex w-full gap-4 rounded-md border-2 p-4 text-left text-base transition focus:outline-none focus:ring-2 focus:ring-blue-500 ${imageMode ? "items-center justify-center" : "items-start"} ${
                       isSelected
                         ? "border-blue-700 bg-blue-50 text-blue-950"
                         : "border-slate-300 bg-white hover:border-slate-500"
@@ -307,7 +317,7 @@ export function ExamEngine() {
                     <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-sm font-bold ${isSelected ? "bg-blue-700 text-white" : "bg-slate-200 text-slate-700"}`}>
                       {option}
                     </span>
-                    <span className="pt-0.5 leading-6">{optionText}</span>
+                    {imageMode ? <span className="font-semibold">Option {option}</span> : <span className="pt-0.5 leading-6">{optionText}</span>}
                   </button>
                 );
               })}
@@ -351,6 +361,7 @@ export function ExamEngine() {
       <FinishDialog
         open={isFinishOpen}
         session={currentSession}
+        practice={practice}
         answered={answeredCount}
         unanswered={sessionQuestions.length - answeredCount}
         flagged={flaggedCount}

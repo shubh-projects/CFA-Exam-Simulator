@@ -8,13 +8,18 @@ import { ResultsDashboard } from "../components/ResultsDashboard";
 import { type ExamQuestion, useExamStore } from "../store/useExamStore";
 import { parseOcrPages } from "../lib/pipeline/parser";
 import { mergePasses } from "../lib/pipeline/merge";
-import type { ParseResult } from "../lib/pipeline/types";
-import { ocrImages } from "../lib/pipeline/ocr";
+import type { ParseResult, QuestionCrop } from "../lib/pipeline/types";
+import { ocrImages, setColumnMargin } from "../lib/pipeline/ocr";
+import { parsePracticePages } from "../lib/pipeline/practice";
+import { CFA_TOPICS } from "../lib/pipeline/topics";
+import { applyDisplayStatus } from "../lib/pipeline/edit";
 import { localDb } from "../lib/db/local";
 import { ReviewScreen } from "../components/ReviewScreen";
-import { setPageSource } from "../lib/pipeline/pageSource";
+import { setPageSource, hasPageSource, prepareRegions } from "../lib/pipeline/pageSource";
+import { clearLayouts, computeCrops, type CropMode } from "../lib/pipeline/layout";
 
 type UploadType = "mock" | "practice";
+type Parsed = { parsed: ParseResult; cropMode: CropMode };
 
 function formatTime(totalSeconds: number): string {
   const minutes = Math.floor(Math.max(0, totalSeconds) / 60);
@@ -22,11 +27,19 @@ function formatTime(totalSeconds: number): string {
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
+/** A broken text layer (fragments like "Ques / uesti") must not replace OCR: real English is full of small common words. */
+function looksLikeText(text: string): boolean {
+  const words = text.toLowerCase().match(/[a-z]+/g) ?? []; if (words.length < 30) return false;
+  const common = new Set(["the","of","and","to","a","in","is","for","that","on","will","be","with","as","by","at","an","are","if","most","likely","which","following","bond","than","its","it","or","from","this","not","would","has","have","all","other","answer","question","because"]);
+  return words.filter((w) => common.has(w)).length / words.length >= 0.22 && words.filter((w) => w.length === 1).length / words.length < 0.2;
+}
+
 export default function HomePage() {
   const {
     phase,
     breakTimeLeft,
     setExamData,
+    setMode,
     setDurations,
     startSession,
     tick,
@@ -38,18 +51,37 @@ export default function HomePage() {
   const [pastedText, setPastedText] = useState("");
   const [sessionMinutes, setSessionMinutes] = useState(100);
   const [breakMinutes, setBreakMinutes] = useState(31);
+  const [subject, setSubject] = useState<string>(CFA_TOPICS[1]);
+  const [practiceMinutes, setPracticeMinutes] = useState(90);
 
-  const openReview = (pages: Record<string, string>) => openParsed(parseOcrPages(pages));
-  const openParsed = (parsed: ParseResult) => {
-    if (!parsed.questions.length) throw new Error("No questions found. Check the format guide or try clearer source pages.");
-    const questions = uploadType === "practice" ? [...parsed.questions].sort(() => Math.random() - 0.5) : parsed.questions;
-    setExamData(questions as ExamQuestion[]); setDurations(sessionMinutes, breakMinutes); useExamStore.setState({ phase: "review" });
+  /** Reads the page texts with the parser that matches the chosen upload type. */
+  const parsePages = (pages: Record<string, string>): Parsed => {
+    if (uploadType === "practice") {
+      const result = parsePracticePages(pages, subject);
+      return { parsed: { questions: result.questions, inferredSessions: false }, cropMode: result.style ? { kind: "practice", start: result.style.re, strict: result.style.strict, stop: result.stop } : { kind: "mock" } };
+    }
+    return { parsed: parseOcrPages(pages), cropMode: { kind: "mock" } };
+  };
+  const openReview = (pages: Record<string, string>) => openParsed(parsePages(pages));
+  const openParsed = async ({ parsed, cropMode }: Parsed) => {
+    if (!parsed.questions.length) throw new Error(uploadType === "practice" ? "No questions found. Make sure the PDF has numbered questions (Question 1, Q1. or 1.) with options A, B and C." : "No questions found. Check the format guide or try clearer source pages.");
+    const questions = computeCrops(parsed.questions, undefined, cropMode).map(applyDisplayStatus);
+    setMode(uploadType, uploadType === "practice" ? subject : null);
+    setExamData(questions as ExamQuestion[]);
+    if (uploadType === "practice") setDurations(practiceMinutes, 0); else setDurations(sessionMinutes, breakMinutes);
+    // Questions are shown as cut-outs from the PDF; broken option text does not matter, so the exam starts directly unless some answer keys need your confirmation.
+    const crops = questions.filter((q) => q.showImage && q.crop).map((q) => q.crop as QuestionCrop);
+    if (crops.length && hasPageSource()) { setError(`Preparing question pictures…`); await prepareRegions(crops, (done, total) => setError(`Preparing question pictures ${done}/${total}…`)).catch(() => undefined); setError(null); }
+    // Only if some questions could not be checked automatically (answer key unmatched, or no picture and unreadable options) show a SHORT review of just those.
+    const flagged = (useExamStore.getState().examData as unknown as Array<{ status?: string }>).filter((q) => q.status === "needs_review").length;
+    // Practice packs always show the review screen first (check each question picture and answer, fix anything, then Start). Mock exams only when something is flagged.
+    if (flagged > 0 || uploadType === "practice") useExamStore.setState({ phase: "review" }); else useExamStore.getState().startSession(1);
   };
 
   async function handleImages(event: ChangeEvent<HTMLInputElement>) {
     const imageFiles = Array.from(event.target.files ?? []); if (!imageFiles.length) return;
-    setIsLoading(true); setError(null);
-    try { setPageSource(async (page) => { const bitmap = await createImageBitmap(imageFiles[page]); const canvas = document.createElement("canvas"); canvas.width = bitmap.width; canvas.height = bitmap.height; canvas.getContext("2d")!.drawImage(bitmap, 0, 0); bitmap.close(); return canvas; }, imageFiles.length); const jobId = crypto.randomUUID(); const pages = await ocrImages(jobId, imageFiles.map((image, page) => ({ page, image })), (progress) => setError(progress.stage)); openReview(pages); }
+    setIsLoading(true); setError(null); setColumnMargin(uploadType === "practice" ? 70 : 25);
+    try { clearLayouts(); setPageSource(async (page) => { const bitmap = await createImageBitmap(imageFiles[page]); const canvas = document.createElement("canvas"); canvas.width = bitmap.width; canvas.height = bitmap.height; canvas.getContext("2d")!.drawImage(bitmap, 0, 0); bitmap.close(); return canvas; }, imageFiles.length); const jobId = crypto.randomUUID(); const pages = await ocrImages(jobId, imageFiles.map((image, page) => ({ page, image })), (progress) => setError(progress.stage)); await openReview(pages); }
     catch (caught) { setError(caught instanceof Error ? caught.message : "Image OCR failed."); } finally { setIsLoading(false); }
   }
 
@@ -65,32 +97,34 @@ export default function HomePage() {
   async function handlePdf(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]; if (!file) return;
     if (file.size > 60 * 1024 * 1024) setError("Large PDF: processing may be slow on this device.");
-    setIsLoading(true); setError(null);
+    setIsLoading(true); setError(null); setColumnMargin(uploadType === "practice" ? 70 : 25);
     try {
       const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs"); pdfjs.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.min.mjs";
       // wasmUrl: scanned PDFs are usually JBIG2/JPEG2000 compressed; without these decoders pages render blank
       const pdf = (await pdfjs.getDocument({ data: await file.arrayBuffer(), wasmUrl: "/pdfjs/wasm/" }).promise) as unknown as PdfLike;
       if (pdf.numPages > 150) setError("Large PDF: more than 150 pages.");
-      setPageSource((page) => renderPdfPage(pdf, page, 110), pdf.numPages); // lets the review screen show the original page
+      clearLayouts(); setPageSource((page, dpi) => renderPdfPage(pdf, page, dpi ?? 110), pdf.numPages); // lets the review screen show the original page
       const direct: Record<string, string> = {}; const needOcr: number[] = []; const jobId = crypto.randomUUID();
       for (let page = 1; page <= pdf.numPages; page += 1) {
         const source = await pdf.getPage(page); const content = await source.getTextContent(); const text = content.items.map((item) => (item.str ?? "") + (item.hasEOL ? "\n" : " ")).join("");
-        if (text.length >= 200) { direct[String(page - 1)] = text; await localDb.pageText.put({ id: `${jobId}:text:${page - 1}`, jobId, page: page - 1, text, pass: "a" }); } else needOcr.push(page - 1);
+        if (text.length >= 200 && looksLikeText(text)) { direct[String(page - 1)] = text; await localDb.pageText.put({ id: `${jobId}:text:${page - 1}`, jobId, page: page - 1, text, pass: "a" }); } else needOcr.push(page - 1);
         setError(`Reading PDF (page ${page} of ${pdf.numPages})`);
       }
+      // A bad embedded text layer (an old OCR with fragments like "Ques / uesti") can still look like English on some pages. If fewer than 60% of the pages have a usable layer, distrust it everywhere and OCR every page; mixing garbled text and OCR breaks question numbering.
+      if (Object.keys(direct).length < pdf.numPages * 0.6) { for (const key of Object.keys(direct)) { needOcr.push(Number(key)); delete direct[key]; } needOcr.sort((a, b) => a - b); }
       // Pass 1: every scanned page at 200 DPI. Pages are rendered one at a time (keeps memory low).
       const first = needOcr.length ? await ocrImages(jobId, needOcr.map((page) => ({ page, image: () => renderPdfPage(pdf, page, 200) })), (progress) => setError(progress.stage)) : {};
-      const pagesA = { ...direct, ...first }; let parsed = parseOcrPages(pagesA);
+      const pagesA = { ...direct, ...first }; let parsedAll = parsePages(pagesA); let parsed = parsedAll.parsed;
       // Pass 2: automatically re-read ONLY the pages behind flagged questions, at 300 DPI with another layout mode, and keep the better result.
       const flagged = parsed.questions.filter((question) => question.status === "needs_review");
       const redo = new Set<number>();
       flagged.forEach((question) => [question.sourcePage, question.sourcePage + 1, question.keyPage].forEach((page) => { if (page !== undefined && needOcr.includes(page)) redo.add(page); }));
       if (redo.size) {
         const second = await ocrImages(jobId, [...redo].map((page) => ({ page, image: () => renderPdfPage(pdf, page, 300) })), (progress) => setError(`Re-reading ${redo.size} difficult pages: ${progress.done} of ${progress.total}`), "b");
-        const parsedB = parseOcrPages({ ...pagesA, ...second });
-        parsed = { ...parsedB, questions: mergePasses(parsed.questions, parsedB.questions) };
+        const parsedBAll = parsePages({ ...pagesA, ...second }); const parsedB = parsedBAll.parsed;
+        parsed = { ...parsedB, questions: mergePasses(parsed.questions, parsedB.questions) }; parsedAll = { parsed, cropMode: parsedBAll.cropMode };
       }
-      openParsed(parsed);
+      await openParsed({ ...parsedAll, parsed });
     } catch (caught) { setError(caught instanceof Error ? caught.message : "Unreadable or password-protected PDF."); } finally { setIsLoading(false); }
   }
 
@@ -112,8 +146,8 @@ export default function HomePage() {
     setIsLoading(true);
     try {
       const fileText = files.length ? (await Promise.all(files.map((file) => file.text()))).join("\n") : "";
-      setPageSource(null, 0);
-      openReview({ "0": `${fileText}\n${pastedText}` });
+      setPageSource(null, 0); clearLayouts();
+      await openReview({ "0": `${fileText}\n${pastedText}` });
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "An unexpected upload error occurred.");
     } finally {
@@ -171,15 +205,24 @@ export default function HomePage() {
           <label className="block rounded border border-dashed border-slate-300 p-3 text-sm font-semibold">PDF (text layer first; local OCR for scans)<input type="file" accept="application/pdf" onChange={handlePdf} className="mt-2 block w-full text-xs" /></label>
           <label className="block"><span className="mb-2 block text-sm font-semibold">Or paste exam text</span><textarea value={pastedText} onChange={(event) => setPastedText(event.target.value)} className="h-40 w-full rounded border border-slate-300 p-3 font-mono text-xs" placeholder="Session 1 - Questions..." /></label>
           <label className="block rounded border border-dashed border-slate-300 p-3 text-sm font-semibold">Page images (PNG/JPG, processed locally)<input type="file" accept="image/png,image/jpeg" multiple onChange={handleImages} className="mt-2 block w-full text-xs" /></label>
-          <div className="grid grid-cols-2 gap-3"><label className="text-sm font-semibold">Session minutes<input type="number" min="1" value={sessionMinutes} onChange={(event) => setSessionMinutes(Number(event.target.value))} className="mt-1 w-full rounded border p-2" /></label><label className="text-sm font-semibold">Break minutes<input type="number" min="0" value={breakMinutes} onChange={(event) => setBreakMinutes(Number(event.target.value))} className="mt-1 w-full rounded border p-2" /></label></div>
-
           <label className="block">
-            <span className="mb-2 block text-sm font-semibold text-slate-800">Upload type</span>
+            <span className="mb-2 block text-sm font-semibold text-slate-800">Exam type</span>
             <select value={uploadType} onChange={(event) => setUploadType(event.target.value as UploadType)} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-3 text-sm text-slate-800 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100">
-              <option value="mock">Mock exam — one PDF, preserved order</option>
-              <option value="practice">Practice pack — multiple PDFs, shuffled topics</option>
+              <option value="mock">Mock exam — two sessions with a break</option>
+              <option value="practice">Premium practice pack — one subject, one timed session</option>
             </select>
           </label>
+          {uploadType === "mock" ? (
+            <div className="grid grid-cols-2 gap-3"><label className="text-sm font-semibold">Session minutes<input type="number" min="1" value={sessionMinutes} onChange={(event) => setSessionMinutes(Number(event.target.value))} className="mt-1 w-full rounded border p-2" /></label><label className="text-sm font-semibold">Break minutes<input type="number" min="0" value={breakMinutes} onChange={(event) => setBreakMinutes(Number(event.target.value))} className="mt-1 w-full rounded border p-2" /></label></div>
+          ) : (
+            <div className="space-y-3 rounded-lg border border-blue-200 bg-blue-50/50 p-4">
+              <p className="text-xs text-slate-600">Upload a PDF that contains questions of <b>one subject</b>. The whole PDF becomes a single timed exam with no break, and you get the same analysis as the mock.</p>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_9rem]">
+                <label className="text-sm font-semibold">Subject<select value={subject} onChange={(event) => setSubject(event.target.value)} className="mt-1 w-full rounded border bg-white p-2">{CFA_TOPICS.map((t) => <option key={t} value={t}>{t}</option>)}</select></label>
+                <label className="text-sm font-semibold">Time limit (minutes)<input type="number" min="1" value={practiceMinutes} onChange={(event) => setPracticeMinutes(Number(event.target.value))} className="mt-1 w-full rounded border p-2" /></label>
+              </div>
+            </div>
+          )}
 
           {error && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>}
 

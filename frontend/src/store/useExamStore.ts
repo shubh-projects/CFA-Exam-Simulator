@@ -24,6 +24,7 @@ export interface ExamQuestion {
   status?: "ok" | "corrected" | "needs_review";
   reason?: string;
   sourcePage?: number;
+  subtopic?: string;
   [key: string]: unknown;
 }
 
@@ -32,7 +33,12 @@ export interface QuestionTelemetry {
   switchHistory: AnswerOption[];
 }
 
+export type ExamMode = "mock" | "practice";
+
 interface ExamState {
+  /** mock = two sessions with a break; practice = one subject, one timed session, no break. */
+  mode: ExamMode;
+  practiceSubject: string | null;
   examData: ExamQuestion[];
   phase: ExamPhase;
   currentSession: 1 | 2;
@@ -47,6 +53,7 @@ interface ExamState {
   flags: Record<string, boolean>;
   telemetry: Record<string, QuestionTelemetry>;
 
+  setMode: (mode: ExamMode, subject?: string | null) => void;
   setExamData: (questions: ExamQuestion[]) => void;
   updateQuestion: (questionId: string, patch: Partial<ExamQuestion>) => void;
   setDurations: (sessionMinutes: number, breakMinutes: number) => void;
@@ -68,6 +75,8 @@ const emptyTelemetry = (): QuestionTelemetry => ({
 });
 
 export const useExamStore = create<ExamState>((set) => ({
+  mode: "mock",
+  practiceSubject: null,
   examData: [],
   phase: "intro",
   currentSession: 1,
@@ -81,6 +90,8 @@ export const useExamStore = create<ExamState>((set) => ({
   answers: {},
   flags: {},
   telemetry: {},
+
+  setMode: (mode, subject = null) => set({ mode, practiceSubject: mode === "practice" ? subject : null }),
 
   setExamData: (examData) =>
     set({
@@ -115,6 +126,7 @@ export const useExamStore = create<ExamState>((set) => ({
 
   finishSession: () =>
     set((state) => {
+      if (state.mode === "practice") return { phase: "results", currentSession: 1, sessionEndAt: null };
       if (state.phase === "session1") {
         return {
           phase: "break",
@@ -183,6 +195,7 @@ export const useExamStore = create<ExamState>((set) => ({
     set((state) => {
       if (state.phase === "session1" || state.phase === "session2") {
         const remaining = Math.max(0, Math.ceil(((state.sessionEndAt ?? Date.now()) - Date.now()) / 1_000));
+        if (remaining === 0 && state.mode === "practice") return { phase: "results", currentSession: 1, sessionEndAt: null };
         if (remaining === 0) return state.phase === "session1"
           ? { phase: "break", currentSession: 1, breakTimeLeft: state.breakDurationSeconds, sessionEndAt: null, breakEndAt: Date.now() + state.breakDurationSeconds * 1_000 }
           : { phase: "results", currentSession: 2, sessionEndAt: null };
