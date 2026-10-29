@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react";
 import { FileUp, LoaderCircle, Play, TimerReset } from "lucide-react";
 
 import { ExamEngine } from "../components/ExamEngine";
@@ -47,6 +47,7 @@ export default function HomePage() {
   const [files, setFiles] = useState<File[]>([]);
   const [uploadType, setUploadType] = useState<UploadType>("mock");
   const [isLoading, setIsLoading] = useState(false);
+  const busy = useRef(false); const skipRefine = useRef(false); const [refining, setRefining] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pastedText, setPastedText] = useState("");
   const [sessionMinutes, setSessionMinutes] = useState(100);
@@ -80,9 +81,11 @@ export default function HomePage() {
 
   async function handleImages(event: ChangeEvent<HTMLInputElement>) {
     const imageFiles = Array.from(event.target.files ?? []); if (!imageFiles.length) return;
+    if (busy.current) { setError("Still reading the previous file. Please wait for it to finish."); return; }
+    busy.current = true;
     setIsLoading(true); setError(null); setColumnMargin(uploadType === "practice" ? 70 : 25);
     try { clearLayouts(); setPageSource(async (page) => { const bitmap = await createImageBitmap(imageFiles[page]); const canvas = document.createElement("canvas"); canvas.width = bitmap.width; canvas.height = bitmap.height; canvas.getContext("2d")!.drawImage(bitmap, 0, 0); bitmap.close(); return canvas; }, imageFiles.length); const jobId = crypto.randomUUID(); const pages = await ocrImages(jobId, imageFiles.map((image, page) => ({ page, image })), (progress) => setError(progress.stage)); await openReview(pages); }
-    catch (caught) { setError(caught instanceof Error ? caught.message : "Image OCR failed."); } finally { setIsLoading(false); }
+    catch (caught) { setError(caught instanceof Error ? caught.message : "Image OCR failed."); } finally { setIsLoading(false); busy.current = false; }
   }
 
   type PdfLike = { numPages: number; getPage(n: number): Promise<{ getViewport(o: { scale: number }): { width: number; height: number }; getTextContent(): Promise<{ items: Array<{ str?: string; hasEOL?: boolean }> }>; render(o: unknown): { promise: Promise<void> }; cleanup?: () => void }> };
@@ -96,6 +99,8 @@ export default function HomePage() {
 
   async function handlePdf(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]; if (!file) return;
+    if (busy.current) { setError("Still reading the previous file. Please wait for it to finish (or refresh the page)."); event.target.value = ""; return; }
+    busy.current = true; skipRefine.current = false; setRefining(false);
     if (file.size > 60 * 1024 * 1024) setError("Large PDF: processing may be slow on this device.");
     setIsLoading(true); setError(null); setColumnMargin(uploadType === "practice" ? 70 : 25);
     try {
@@ -113,19 +118,23 @@ export default function HomePage() {
       // A bad embedded text layer (an old OCR with fragments like "Ques / uesti") can still look like English on some pages. If fewer than 60% of the pages have a usable layer, distrust it everywhere and OCR every page; mixing garbled text and OCR breaks question numbering.
       if (Object.keys(direct).length < pdf.numPages * 0.6) { for (const key of Object.keys(direct)) { needOcr.push(Number(key)); delete direct[key]; } needOcr.sort((a, b) => a - b); }
       // Pass 1: every scanned page at 200 DPI. Pages are rendered one at a time (keeps memory low).
-      const first = needOcr.length ? await ocrImages(jobId, needOcr.map((page) => ({ page, image: () => renderPdfPage(pdf, page, 200) })), (progress) => setError(progress.stage)) : {};
+      const practice = uploadType === "practice"; const pass1Dpi = practice ? 150 : 200; // the packs are scanned at 150 dpi, so reading them at 200 only adds work
+      const first = needOcr.length ? await ocrImages(jobId, needOcr.map((page) => ({ page, image: () => renderPdfPage(pdf, page, pass1Dpi) })), (progress) => setError(`${progress.stage} - keep this tab open`), { pass: "a", dpi: pass1Dpi }) : {};
       const pagesA = { ...direct, ...first }; let parsedAll = parsePages(pagesA); let parsed = parsedAll.parsed;
-      // Pass 2: automatically re-read ONLY the pages behind flagged questions, at 300 DPI with another layout mode, and keep the better result.
-      const flagged = parsed.questions.filter((question) => question.status === "needs_review");
+      // Pass 2 (mock exams only): re-read just the pages behind questions whose ANSWER KEY could not be matched. Practice packs are shown as pictures, so they never need it.
+      // It is optional: a failure or the Skip button keeps the first reading.
       const redo = new Set<number>();
-      flagged.forEach((question) => [question.sourcePage, question.sourcePage + 1, question.keyPage].forEach((page) => { if (page !== undefined && needOcr.includes(page)) redo.add(page); }));
-      if (redo.size) {
-        const second = await ocrImages(jobId, [...redo].map((page) => ({ page, image: () => renderPdfPage(pdf, page, 300) })), (progress) => setError(`Re-reading ${redo.size} difficult pages: ${progress.done} of ${progress.total}`), "b");
-        const parsedBAll = parsePages({ ...pagesA, ...second }); const parsedB = parsedBAll.parsed;
-        parsed = { ...parsedB, questions: mergePasses(parsed.questions, parsedB.questions) }; parsedAll = { parsed, cropMode: parsedBAll.cropMode };
+      if (!practice) parsed.questions.filter((question) => question.keyIssue).forEach((question) => [question.sourcePage, question.keyPage].forEach((page) => { if (page !== undefined && needOcr.includes(page)) redo.add(page); }));
+      if (redo.size && redo.size <= 40) {
+        try {
+          setRefining(true);
+          const second = await ocrImages(jobId, [...redo].map((page) => ({ page, image: () => renderPdfPage(pdf, page, 250) })), (progress) => setError(`Re-reading ${redo.size} difficult pages: ${progress.done} of ${progress.total}`), { pass: "b", dpi: 250, maxWorkers: 2, shouldStop: () => skipRefine.current, pageTimeoutMs: 60_000 });
+          if (Object.keys(second).length) { const parsedBAll = parsePages({ ...pagesA, ...second }); const parsedB = parsedBAll.parsed; parsed = { ...parsedB, questions: mergePasses(parsed.questions, parsedB.questions) }; parsedAll = { parsed, cropMode: parsedBAll.cropMode }; }
+        } catch { /* keep the first reading */ }
+        setRefining(false);
       }
       await openParsed({ ...parsedAll, parsed });
-    } catch (caught) { setError(caught instanceof Error ? caught.message : "Unreadable or password-protected PDF."); } finally { setIsLoading(false); }
+    } catch (caught) { setError(caught instanceof Error ? caught.message : "Unreadable or password-protected PDF."); } finally { setIsLoading(false); setRefining(false); busy.current = false; }
   }
 
   useEffect(() => {
@@ -202,7 +211,7 @@ export default function HomePage() {
             />
             <span className="mt-2 block text-xs text-slate-500">{files.length === 0 ? "Select one or more text files." : `${files.length} file${files.length === 1 ? "" : "s"} selected.`}</span>
           </label>
-          <label className="block rounded border border-dashed border-slate-300 p-3 text-sm font-semibold">PDF (text layer first; local OCR for scans)<input type="file" accept="application/pdf" onChange={handlePdf} className="mt-2 block w-full text-xs" /></label>
+          <label className="block rounded border border-dashed border-slate-300 p-3 text-sm font-semibold">PDF (text layer first; local OCR for scans)<input type="file" accept="application/pdf" onChange={handlePdf} disabled={isLoading} className="mt-2 block w-full text-xs" /></label>
           <label className="block"><span className="mb-2 block text-sm font-semibold">Or paste exam text</span><textarea value={pastedText} onChange={(event) => setPastedText(event.target.value)} className="h-40 w-full rounded border border-slate-300 p-3 font-mono text-xs" placeholder="Session 1 - Questions..." /></label>
           <label className="block rounded border border-dashed border-slate-300 p-3 text-sm font-semibold">Page images (PNG/JPG, processed locally)<input type="file" accept="image/png,image/jpeg" multiple onChange={handleImages} className="mt-2 block w-full text-xs" /></label>
           <label className="block">
@@ -224,6 +233,7 @@ export default function HomePage() {
             </div>
           )}
 
+          {refining && <button type="button" onClick={() => { skipRefine.current = true; setError("Skipping the extra re-read…"); }} className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Skip the extra re-read and continue</button>}
           {error && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>}
 
           <button type="submit" disabled={isLoading} className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-blue-700 px-5 py-3.5 text-sm font-bold text-white transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:bg-slate-400">

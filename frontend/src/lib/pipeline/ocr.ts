@@ -53,34 +53,53 @@ async function imageSize(source: Blob | HTMLCanvasElement): Promise<{ width: num
   try { const bitmap = await createImageBitmap(source); const size = { width: bitmap.width, height: bitmap.height }; bitmap.close(); return size; } catch { return null; }
 }
 
-export async function ocrImages(jobId: string, images: Array<{ page: number; image: Blob | HTMLCanvasElement | (() => Promise<HTMLCanvasElement>) }>, onProgress: (progress: OcrProgress) => void, pass: "a" | "b" = "a", onPageDone?: (page: number, text: string, wordCount: number) => void): Promise<Record<string, string>> {
-  const total = images.length; const poolSize = Math.min(navigator.hardwareConcurrency || 2, 4); let cursor = 0; let done = 0;
-  const workers: Worker[] = await Promise.all(Array.from({ length: Math.min(poolSize, total) }, async () => {
-    const worker = await createWorker("eng", 1, {
-      workerPath: "/tesseract/worker.min.js",
-      corePath: "/tesseract/core",
-      langPath: "/tesseract/lang",
-      gzip: true,
-    });
-    await worker.setParameters({ tessedit_pageseg_mode: pass === "a" ? PSM.SINGLE_COLUMN : PSM.SINGLE_BLOCK, user_defined_dpi: pass === "a" ? "200" : "300" });
-    return worker;
-  }));
+/** Options for one OCR run. */
+export interface OcrOptions { pass?: "a" | "b"; dpi?: number; onPageDone?: (page: number, text: string, wordCount: number) => void; /** Return true to stop early (the pages read so far are kept). */ shouldStop?: () => boolean; /** A page that takes longer than this is skipped, so one bad page cannot freeze everything. */ pageTimeoutMs?: number; maxWorkers?: number; }
+
+const timeoutAfter = <T,>(promise: Promise<T>, ms: number): Promise<T> => new Promise<T>((resolve, reject) => { const id = setTimeout(() => reject(new Error("timeout")), ms); promise.then((v) => { clearTimeout(id); resolve(v); }, (e) => { clearTimeout(id); reject(e); }); });
+
+async function makeWorker(pass: "a" | "b", dpi: number): Promise<Worker> {
+  const worker = await createWorker("eng", 1, { workerPath: "/tesseract/worker.min.js", corePath: "/tesseract/core", langPath: "/tesseract/lang", gzip: true });
+  await worker.setParameters({ tessedit_pageseg_mode: pass === "a" ? PSM.SINGLE_COLUMN : PSM.SINGLE_BLOCK, user_defined_dpi: String(dpi) });
+  return worker;
+}
+
+export async function ocrImages(jobId: string, images: Array<{ page: number; image: Blob | HTMLCanvasElement | (() => Promise<HTMLCanvasElement>) }>, onProgress: (progress: OcrProgress) => void, passOrOptions: "a" | "b" | OcrOptions = "a", legacyOnPageDone?: (page: number, text: string, wordCount: number) => void): Promise<Record<string, string>> {
+  const options: OcrOptions = typeof passOrOptions === "string" ? { pass: passOrOptions, onPageDone: legacyOnPageDone } : passOrOptions;
+  const pass = options.pass ?? "a"; const dpi = options.dpi ?? (pass === "a" ? 200 : 300); const pageTimeoutMs = options.pageTimeoutMs ?? 90_000;
+  const total = images.length;
+  // Fewer engines on weaker laptops: every engine holds ~150 MB, and too many make a 4-core machine with 8 GB slow down or freeze.
+  const cores = navigator.hardwareConcurrency || 2; const memory = (navigator as unknown as { deviceMemory?: number }).deviceMemory ?? 4;
+  const poolSize = Math.max(1, Math.min(options.maxWorkers ?? 3, cores - 1, memory >= 8 ? 3 : 2));
+  let cursor = 0; let done = 0;
+  const workers: Worker[] = await Promise.all(Array.from({ length: Math.min(poolSize, total) }, () => makeWorker(pass, dpi)));
   const result: Record<string, string> = {};
-  await Promise.all(workers.map(async (worker) => {
-    while (cursor < images.length) {
-      const item = images[cursor++]; const lazy = typeof item.image === "function"; const source = lazy ? await (item.image as () => Promise<HTMLCanvasElement>)() : (item.image as Blob | HTMLCanvasElement); const recognized = await worker.recognize(source, {}, { text: true, hocr: false, tsv: false, blocks: true });
-      const data = recognized.data as unknown as OcrData;
-      const size = await imageSize(source);
-      const width = size?.width ?? Math.max(1, ...extractLines(data).flat().map((word) => word.bbox.x1 / 0.935));
-      if (lazy && source instanceof HTMLCanvasElement) { source.width = 0; source.height = 0; } // free the page bitmap right away
-      const filtered = filterColumnLayout(data, width); const text = filtered.text || data.text;
-      if (size && filtered.lines.length) setPageLayout(item.page, { width: size.width, height: size.height, lines: filtered.lines }); result[String(item.page)] = text;
-      await localDb.pageText.put({ id: `${jobId}:${pass}:${item.page}`, jobId, page: item.page, text, pass });
-      if (item.page === 3 || item.page === 4 || item.page === 5) console.log(`[OCR page ${item.page}] ${data.text.slice(0, 500)}`, { wordCount: extractLines(data).flat().length });
-      onPageDone?.(item.page, text, extractLines(data).flat().length);
+  await Promise.all(workers.map(async (initial, slot) => {
+    let worker = initial;
+    while (cursor < images.length && !options.shouldStop?.()) {
+      const item = images[cursor++];
+      try {
+        const lazy = typeof item.image === "function";
+        const source = lazy ? await (item.image as () => Promise<HTMLCanvasElement>)() : (item.image as Blob | HTMLCanvasElement);
+        const recognized = await timeoutAfter(worker.recognize(source, {}, { text: true, hocr: false, tsv: false, blocks: true }), pageTimeoutMs);
+        const data = recognized.data as unknown as OcrData;
+        const size = await imageSize(source);
+        const wordList = extractLines(data).flat();
+        const width = size?.width ?? Math.max(1, ...wordList.map((word) => word.bbox.x1 / 0.935));
+        if (lazy && source instanceof HTMLCanvasElement) { source.width = 0; source.height = 0; } // free the page bitmap right away
+        const filtered = filterColumnLayout(data, width); const text = filtered.text || data.text;
+        if (size && filtered.lines.length) setPageLayout(item.page, { width: size.width, height: size.height, lines: filtered.lines });
+        result[String(item.page)] = text;
+        await localDb.pageText.put({ id: `${jobId}:${pass}:${item.page}`, jobId, page: item.page, text, pass });
+        options.onPageDone?.(item.page, text, wordList.length);
+      } catch {
+        // A page that fails or takes too long is skipped; the engine that was working on it is replaced with a fresh one.
+        try { await worker.terminate(); } catch { /* ignore */ }
+        if (cursor < images.length && !options.shouldStop?.()) { try { worker = await makeWorker(pass, dpi); } catch { break; } } else break;
+      }
       done += 1; onProgress({ done, total, stage: `Recognising text (page ${done} of ${total})` });
     }
+    void slot; try { await worker.terminate(); } catch { /* ignore */ }
   }));
-  await Promise.all(workers.map((worker) => worker.terminate()));
   return result;
 }
